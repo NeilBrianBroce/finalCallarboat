@@ -1,5 +1,5 @@
 import {initializeApp} from '../node_modules/firebase/app'
-import { getFirestore, collection, getDocs, addDoc, getDoc, doc, deleteDoc, setDoc } from '../node_modules/firebase/firestore';
+import { getFirestore, collection, getDocs, addDoc, getDoc, query, where, orderBy, doc, deleteDoc, setDoc } from '../node_modules/firebase/firestore';
 
   const firebaseConfig = {
       apiKey: "AIzaSyAUWz7jfrt46iBvAnZ-AESn8kNmqtbTlmw",
@@ -69,26 +69,53 @@ async function addVessel(vesselName, vesselType, affiliation) {
   }
 }
 
-// Function to fetch all vessels from Firestore
 async function fetchVessels() {
   try {
-    const querySnapshot = await getDocs(vesselsColRef);
+    const orderedQuery  = query(vesselsColRef, orderBy('vesselName', 'asc'));
     const vessels = [];
 
-    querySnapshot.forEach((doc) => {
-      const vesselData = doc.data();
-      const vessel = {
-        id: doc.id, // Add the id property to the vessel object
-        ...vesselData
-      };
-      vessels.push(vessel);
-    });
+    getDocs(orderedQuery)
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        vessels.push(data); // Add the data to the array
+      });
 
-    displayVesselsInTable(vessels);
+      // Now, the "vessels" array contains the ordered documents
+      console.log(vessels);
+      displayVesselsInTable(vessels);
+    })
+    .catch((error) => {
+      console.error('Error getting documents: ', error);
+    });
   } catch (error) {
     console.error('Error fetching vessels:', error);
   }
 }
+
+async function searchVessels(searchFor, searchVal) {
+  try {
+    const queryWithSearch = query(vesselsColRef, where(searchFor, '==', searchVal));
+    const searvhVessels = [];
+
+    getDocs(queryWithSearch)
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        searvhVessels.push(data); // Add the data to the array
+      });
+
+      // Now, the "vessels" array contains the ordered documents
+      console.log("searvhVessels", searvhVessels);
+    })
+    .catch((error) => {
+      console.error('Error getting documents: ', error);
+    });
+  } catch (error) {
+    console.error('Error fetching vessels:', error);
+  }
+}
+
 
 
 // Function to display the vessels in an HTML table
@@ -233,6 +260,11 @@ await fetchVessels();
 
 // Fetch the list of vessels when the page loads
 fetchVessels();
+
+// test search
+var searchFor = "vesselName";
+var searchVal = "Zhuming";
+searchVessels(searchFor, searchVal);
 
 // Collection reference for routes
 const routesColRef = collection(db, 'Route');
