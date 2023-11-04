@@ -101,29 +101,37 @@
                 </div>
             </nav>
 
-
            <!-- Vessels Table -->
             <div class="container mt-5 position-relative">
                 <h2>Vessels</h2> <br><br><br>
             
                 <button id="addVessel" class="btn btn-primary position-absolute" style="right: 20px;">Add +</button>
+                <div class="search-bar position-absolute" style="left: 20px;">
+                <select id="searchType" class="form-select">
+                    <option value="vesselName">Vessel Name</option>
+                    <option value="vesselType">Vessel Type</option>
+                    <option value="affiliation">Affiliation</option>
+                </select>
+                <input type="text" id="searchBox" class="form-control" style="width: 200px;" placeholder="Search...">
+                <button id="searchButton" class="btn btn-primary">Search</button>
+                </div>
                 <br><br>
                 <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="vesselsTable" class="table table-bordered table-condensed table-striped">
-                            <thead>
-                            <tr>
-                                <th>Vessel Name</th>
-                                <th>Vessel Type</th>
-                                <th>Affiliation</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                            <tbody id="vesselsTbody">
-                            <!-- Rows will be added dynamically here -->
-                            </tbody>
-                        </table>
+                    <table id="vesselsTable" class="table table-bordered table-condensed table-striped">
+                        <thead>
+                        <tr>
+                            <th>Vessel Name</th>
+                            <th>Vessel Type</th>
+                            <th>Affiliation</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody id="vesselsTbody">
+                        <!-- Rows will be added dynamically here -->
+                        </tbody>
+                    </table>
                     </div>
                 </div>
                 </div>
