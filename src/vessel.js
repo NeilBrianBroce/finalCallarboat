@@ -283,66 +283,72 @@ export function vesselFunctions() {
 
     // Get the form element
     const addVesselForm = document.querySelector('#addVesselModal form');
-    console.log(addVesselForm);
 
-    // Add an event listener for the submit event
-    addVesselForm.addEventListener('submit', async (event) => {
-      // Prevent the form from being submitted normally
-      event.preventDefault();
+    if(addVesselForm){
+      console.log(addVesselForm);
 
-      // Get the values from the form
-      const vesselName = document.getElementById('vesselName').value;
-      const vesselEconomy = document.getElementById('vesselEconomy').value;
-      const vesselBusiness = document.getElementById('vesselBusiness').value;
-
-      // Check if any of the fields are empty
-      if (!vesselName || !vesselEconomy || !vesselBusiness) {
-        alert('All fields must be filled out');
-        return;
-      }
-
-      // Call the addVessel function with the entered data
-      await addVessel(vesselName, vesselEconomy, vesselBusiness);
-
-      // Clear the form
-      addVesselForm.reset();
-
-      // Fetch the updated list of vessels
-      await fetchVessels();
-    });
+      // Add an event listener for the submit event
+      addVesselForm.addEventListener('submit', async (event) => {
+        // Prevent the form from being submitted normally
+        event.preventDefault();
+  
+        // Get the values from the form
+        const vesselName = document.getElementById('vesselName').value;
+        const vesselEconomy = document.getElementById('vesselEconomy').value;
+        const vesselBusiness = document.getElementById('vesselBusiness').value;
+  
+        // Check if any of the fields are empty
+        if (!vesselName || !vesselEconomy || !vesselBusiness) {
+          alert('All fields must be filled out');
+          return;
+        }
+  
+        // Call the addVessel function with the entered data
+        await addVessel(vesselName, vesselEconomy, vesselBusiness);
+  
+        // Clear the form
+        addVesselForm.reset();
+  
+        // Fetch the updated list of vessels
+        await fetchVessels();
+      });
+    }
+    
 
     const editVesselForm = document.querySelector('#editVesselModal form');
-    console.log(editVesselForm);
 
-    // Add an event listener for the submit event
-    editVesselForm.addEventListener('submit', async (event) => {
-      // Prevent the form from being submitted normally
-      event.preventDefault();
+    if(editVesselForm){
+      console.log(editVesselForm);
 
-      // Get the values from the form
-      const vesselID = document.getElementById('editVesselID').value;
-      const vesselName = document.getElementById('editVesselName').value;
-      const vesselEconomy = document.getElementById('editVesselEconomy').value;
-      const vesselBusiness = document.getElementById('editVesselBusiness').value;
-     
-
-      // Check if any of the fields are empty
-      if (!vesselName || !vesselEconomy || !vesselBusiness) {
-        alert('All fields must be filled out');
-        return;
-      }
-
-      // Call the addVessel function with the entered data
-      await editVessel(vesselID, vesselName, vesselEconomy, vesselBusiness);
-
-      // Clear the form
-      editVesselForm.reset();
-
-      // Fetch the updated list of vessels
-      await fetchVessels();
-    });
-
-
+      // Add an event listener for the submit event
+      editVesselForm.addEventListener('submit', async (event) => {
+        // Prevent the form from being submitted normally
+        event.preventDefault();
+  
+        // Get the values from the form
+        const vesselID = document.getElementById('editVesselID').value;
+        const vesselName = document.getElementById('editVesselName').value;
+        const vesselEconomy = document.getElementById('editVesselEconomy').value;
+        const vesselBusiness = document.getElementById('editVesselBusiness').value;
+       
+  
+        // Check if any of the fields are empty
+        if (!vesselName || !vesselEconomy || !vesselBusiness) {
+          alert('All fields must be filled out');
+          return;
+        }
+  
+        // Call the addVessel function with the entered data
+        await editVessel(vesselID, vesselName, vesselEconomy, vesselBusiness);
+  
+        // Clear the form
+        editVesselForm.reset();
+  
+        // Fetch the updated list of vessels
+        await fetchVessels();
+      });
+    }
+    
     // Fetch the list of vessels when the page loads
     fetchVessels();
 
@@ -350,10 +356,6 @@ export function vesselFunctions() {
     var searchFor = "vesselName";
     var searchVal = "Zhuming";
     searchVessels(searchFor, searchVal);
-
-    // Collection reference for routes
-    const routesColRef = collection(db, 'Route');
-
 
 }
 

@@ -113,6 +113,7 @@
            
            <!-- Route Table -->
            <div class="container mt-5 position-relative">
+            <input type="hidden" id="moduleSelected" value="route">
             <h2>Routes</h2> <br><br>
         
             <button id="addRoute" class="btn btn-primary position-absolute" style="right: 20px;">Add +</button>
@@ -124,12 +125,13 @@
                         <thead>
                         <tr>
                             <th>Vessel Name</th>
+                            <th>Route Name</th>
                             <th>Location</th>
                             <th>Destination</th>
                             <th>Action</th>
                         </tr>
                         </thead>
-                        <tbody id="routesTbody">
+                        <tbody id="routeTbody">
                         <!-- Rows will be added dynamically here -->
                         </tbody>
                     </table>
@@ -152,15 +154,63 @@
                         <form id="addRoutesForm">
                             <div class="form-group">
                                 <label for="vesselName" class="col-form-label">Vessel Name:</label>
-                                <input type="text" class="form-control" id="vesselName">
+                                <!-- <input type="text" class="form-control" id="vesselName"> -->
+                                <select id="vesselID" class="form-select">
+                                    <option value="" disabled selected>Select a Vessel</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="routeName" class="col-form-label">Route Name:</label>
+                                <input type="text" class="form-control" id="routeName">
                             </div>
                             <div class="form-group">
                                 <label for="routeLocation" class="col-form-label">Location:</label>
-                                <input type="text" class="form-control" id="location">
+                                <input type="text" class="form-control" id="routeLocation">
                             </div>
                             <div class="form-group">
                                 <label for="destination" class="col-form-label">Destination:</label>
-                                <input type="text" class="form-control" id="destination">
+                                <input type="text" class="form-control" id="routeDestination">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Routes Modal -->
+        <div class="modal fade" id="editRouteModal" tabindex="-1" role="dialog" aria-labelledby="editRouteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editRouteModalLabel">Edit Route</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editRoutesForm">
+                            <div class="form-group">
+                                <input type="hidden" id="editRouteID">
+                                <label for="editVesselName" class="col-form-label">Vessel Name:</label>
+                                <!-- <input type="text" class="form-control" id="vesselName"> -->
+                                <select id="editVesselID" class="form-select">
+                                    <option value="" disabled selected>Select a Vessel</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="routeName" class="col-form-label">Route Name:</label>
+                                <input type="text" class="form-control" id="editRouteName">
+                            </div>
+                            <div class="form-group">
+                                <label for="routeLocation" class="col-form-label">Location:</label>
+                                <input type="text" class="form-control" id="editRouteLocation">
+                            </div>
+                            <div class="form-group">
+                                <label for="destination" class="col-form-label">Destination:</label>
+                                <input type="text" class="form-control" id="editRouteDestination">
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">Submit</button>

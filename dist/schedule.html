@@ -113,7 +113,7 @@
             <!-- Schedule Table-->
             <div class="container mt-5 position-relative">
                 <h2>Schedule</h2> <br><br>
-            
+                <input type="hidden" id="moduleSelected" value="schedule">
                 <div class="card">
                     <div class="card-body">
                         <button id="addSchedule" class="btn btn-primary mb-3 position-absolute" style="top: -40px; right: 20px;">Add +</button>
@@ -122,6 +122,7 @@
                                 <thead>
                                     <tr>
                                         <th>Vessel Name</th>
+                                        <th>Schedule Name</th>
                                         <th>First Trip</th>
                                         <th>Second Trip</th>
                                         <th>Action</th>
@@ -151,16 +152,22 @@
                             <form id="addScheduleForm">
                                 <div class="form-group">
                                     <label for="vesselName" class="col-form-label">Vessel Name:</label>
-                                    <input type="text" class="form-control" id="vesselName">
+                                    <select id="vesselID" class="form-select">
+                                        <option value="" disabled selected>Select a Vessel</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="firstTrip" class="col-form-label">First Trip:</label>
-                                    <input type="text" class="form-control" id="firstTrip">
+                                    <label for="scheduleName" class="col-form-label">Schedule Name:</label>
+                                    <input type="text" class="form-control" id="scheduleName">
                                 </div>
                                 <div class="form-group">
-                                    <label for="secondTrip" class="col-form-label">Second Trip: </label>
-                                    <input type="text" class="form-control" id="secondTrip">
-                                </div>
+                                    <label for="datetimeInput">First Trip:</label>
+                                    <input type="time" id="scheduleFirstTrip" class="form-control">
+                                  </div>
+                                <div class="form-group">
+                                    <label for="datetimeInput">Second Trip:</label>
+                                    <input type="time" id="scheduleSecondTrip" class="form-control">
+                                  </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </div>
@@ -169,6 +176,46 @@
                     </div>
                 </div>
             </div>
+
+                        <!-- Add Schedule Modal -->
+                        <div class="modal fade" id="editScheduleModal" tabindex="-1" role="dialog" aria-labelledby="editScheduleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">                
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editScheduleModalLabel">Edit Schedule</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="editScheduleForm">
+                                            <div class="form-group">
+                                                <input type="hidden" id="editScheduleID">
+                                                <label for="vesselName" class="col-form-label">Vessel Name:</label>
+                                                <select id="editVesselID" class="form-select">
+                                                    <option value="" disabled selected>Select a Vessel</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="scheduleName" class="col-form-label">Schedule Name:</label>
+                                                <input type="text" class="form-control" id="editScheduleName">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="datetimeInput">First Trip:</label>
+                                                <input type="time" id="editScheduleFirstTrip" class="form-control">
+                                              </div>
+                                            <div class="form-group">
+                                                <label for="datetimeInput">Second Trip:</label>
+                                                <input type="time" id="editScheduleSecondTrip" class="form-control">
+                                              </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
     <script>
         // Add click event listener to logo-details
         $('.logo-details').click(function() {
