@@ -54,220 +54,221 @@ import { getFirestore, collection, getDocs, addDoc, getDoc, query, where, orderB
       .catch(err => {
         console.log(err.message)
       })
+
       // Function to add a new vessel to Firestore
-async function addVessel(vesselName, vesselType, affiliation) {
-  try {
-    // Add a new document to the "Vessels" collection with the entered data
-    await addDoc(vesselsColRef, {
-      vesselName: vesselName,
-      vesselType: vesselType,
-      affiliation: affiliation
-    });
-    console.log('Vessel added successfully!');
-  } catch (error) {
-    console.error('Error adding vessel:', error);
-  }
-}
-
-async function fetchVessels() {
-  try {
-    const orderedQuery  = query(vesselsColRef, orderBy('vesselName', 'asc'));
-    const vessels = [];
-
-    getDocs(orderedQuery)
-    .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        vessels.push(data); // Add the data to the array
-      });
-
-      // Now, the "vessels" array contains the ordered documents
-      console.log(vessels);
-      displayVesselsInTable(vessels);
-    })
-    .catch((error) => {
-      console.error('Error getting documents: ', error);
-    });
-  } catch (error) {
-    console.error('Error fetching vessels:', error);
-  }
-}
-
-async function searchVessels(searchFor, searchVal) {
-  try {
-    const queryWithSearch = query(vesselsColRef, where(searchFor, '==', searchVal));
-    const searvhVessels = [];
-
-    getDocs(queryWithSearch)
-    .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        searvhVessels.push(data); // Add the data to the array
-      });
-
-      // Now, the "vessels" array contains the ordered documents
-      console.log("searvhVessels", searvhVessels);
-    })
-    .catch((error) => {
-      console.error('Error getting documents: ', error);
-    });
-  } catch (error) {
-    console.error('Error fetching vessels:', error);
-  }
-}
-
-
-
-// Function to display the vessels in an HTML table
-function displayVesselsInTable(vessels) {
-  // Get the tbody element
-  const tbody = document.getElementById('vesselsTbody');
-
-  // Clear the tbody
-  tbody.innerHTML = '';
-
-  // Iterate over the vessels array and create table rows
-  vessels.forEach((vessel, index) => {
-    const row = document.createElement('tr');
-
-    // Create table cells for each data field
-    const vesselNameCell = document.createElement('td');
-    vesselNameCell.textContent = vessel.vesselName;
-    row.appendChild(vesselNameCell);
-
-    const vesselTypeCell = document.createElement('td');
-    vesselTypeCell.textContent = vessel.vesselType;
-    row.appendChild(vesselTypeCell);
-
-    const affiliationCell = document.createElement('td');
-    affiliationCell.textContent = vessel.affiliation;
-    row.appendChild(affiliationCell);
-
-    // Create Action cell
-    const actionCell = document.createElement('td');
-
-    // Create Edit button
-    const editButton = document.createElement('button');
-    editButton.textContent = 'Edit';
-    editButton.style.backgroundColor = 'blue';
-    editButton.style.color = 'white';
-    // Attach click event to Edit button
-    editButton.addEventListener('click', () => editVessel(index, vessel));
-    actionCell.appendChild(editButton);
-
-    // Create Delete button
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete';
-    deleteButton.style.backgroundColor = 'red';
-    deleteButton.style.color = 'white';
-    // Attach click event to Delete button
-    deleteButton.addEventListener('click', () => deleteVessel(vessel));
-    actionCell.appendChild(deleteButton);
-
-    // Append the Action cell to the row
-    row.appendChild(actionCell);
-
-    // Append the row to the tbody
-    tbody.appendChild(row);
-  });
-}
-// Function to delete a vessel from Firestore
-async function deleteVessel(vessel) {
-  try {
-      // Show a confirmation prompt to the user
-      const confirmDelete = confirm('Do you want to delete this entry?');
-
-      // If the user confirms the deletion
-      if (confirmDelete) {
-          // Delete the document with the corresponding ID from the "Vessels" collection
-          await deleteDoc(doc(db, 'Vessel', vessel.id));
-          console.log('Vessel deleted successfully!');
-
-          // Fetch the updated list of vessels
-          await fetchVessels();
+    async function addVessel(vesselName, vesselEconomy, vesselBusiness) {
+      try {
+        // Add a new document to the "Vessels" collection with the entered data
+        await addDoc(vesselsColRef, {
+          vesselName: vesselName,
+          vesselEconomy: vesselEconomy,
+          vesselBusiness: vesselBusiness
+        });
+        console.log('Vessel added successfully!');
+      } catch (error) {
+        console.error('Error adding vessel:', error);
       }
-  } catch (error) {
-      console.error('Error deleting vessel:', error);
-  }
-}
+    }
 
-// Function to edit a vessel in Firestore
-async function editVessel(index, vessel) {
-  try {
-    // Prompt the user to enter the updated data for the vessel
-    const updatedVesselName = prompt('Enter the updated vessel name:', vessel.vesselName);
-    const updatedVesselType = prompt('Enter the updated vessel type:', vessel.vesselType);
-    const updatedAffiliation = prompt('Enter the updated affiliation:', vessel.affiliation);
-    
+    async function fetchVessels() {
+      try {
+        const orderedQuery  = query(vesselsColRef, orderBy('vesselName', 'asc'));
+        const vessels = [];
+
+        getDocs(orderedQuery)
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            vessels.push(data); // Add the data to the array
+          });
+
+          // Now, the "vessels" array contains the ordered documents
+          console.log(vessels);
+          displayVesselsInTable(vessels);
+        })
+        .catch((error) => {
+          console.error('Error getting documents: ', error);
+        });
+      } catch (error) {
+        console.error('Error fetching vessels:', error);
+      }
+    }
+
+    async function searchVessels(searchFor, searchVal) {
+      try {
+        const queryWithSearch = query(vesselsColRef, where(searchFor, '==', searchVal));
+        const searvhVessels = [];
+
+        getDocs(queryWithSearch)
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            searvhVessels.push(data); // Add the data to the array
+          });
+
+          // Now, the "vessels" array contains the ordered documents
+          console.log("searvhVessels", searvhVessels);
+        })
+        .catch((error) => {
+          console.error('Error getting documents: ', error);
+        });
+      } catch (error) {
+        console.error('Error fetching vessels:', error);
+      }
+    }
+
+
+
+    // Function to display the vessels in an HTML table
+    function displayVesselsInTable(vessels) {
+      // Get the tbody element
+      const tbody = document.getElementById('vesselsTbody');
+
+      // Clear the tbody
+      tbody.innerHTML = '';
+
+      // Iterate over the vessels array and create table rows
+      vessels.forEach((vessel, index) => {
+        const row = document.createElement('tr');
+
+        // Create table cells for each data field
+        const vesselNameCell = document.createElement('td');
+        vesselNameCell.textContent = vessel.vesselName;
+        row.appendChild(vesselNameCell);
+
+        const vesselEconomyCell = document.createElement('td');
+        vesselEconomyCell.textContent = vessel.vesselEconomy;
+        row.appendChild(vesselEconomyCell);
+
+        const vesselBusinessCell = document.createElement('td');
+        vesselBusinessCell.textContent = vessel.vesselBusiness;
+        row.appendChild(vesselBusinessCell);
+
+        // Create Action cell
+        const actionCell = document.createElement('td');
+
+        // Create Edit button
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Edit';
+        editButton.style.backgroundColor = 'blue';
+        editButton.style.color = 'white';
+        // Attach click event to Edit button
+        editButton.addEventListener('click', () => editVessel(index, vessel));
+        actionCell.appendChild(editButton);
+
+        // Create Delete button
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.style.backgroundColor = 'red';
+        deleteButton.style.color = 'white';
+        // Attach click event to Delete button
+        deleteButton.addEventListener('click', () => deleteVessel(vessel));
+        actionCell.appendChild(deleteButton);
+
+        // Append the Action cell to the row
+        row.appendChild(actionCell);
+
+        // Append the row to the tbody
+        tbody.appendChild(row);
+      });
+    }
+    // Function to delete a vessel from Firestore
+    async function deleteVessel(vessel) {
+      try {
+          // Show a confirmation prompt to the user
+          const confirmDelete = confirm('Do you want to delete this entry?');
+
+          // If the user confirms the deletion
+          if (confirmDelete) {
+              // Delete the document with the corresponding ID from the "Vessels" collection
+              await deleteDoc(doc(db, 'Vessel', vessel.id));
+              console.log('Vessel deleted successfully!');
+
+              // Fetch the updated list of vessels
+              await fetchVessels();
+          }
+      } catch (error) {
+          console.error('Error deleting vessel:', error);
+      }
+    }
+
+    // Function to edit a vessel in Firestore
+    async function editVessel(index, vessel) {
+      try {
+        // Prompt the user to enter the updated data for the vessel
+        const updatedVesselName = prompt('Enter the updated vessel name:', vessel.vesselName);
+        const updatedVesselEconomy = prompt('Enter the updated economy:', vessel.vesselEconomy);
+        const updatedVesselBusiness = prompt('Enter the updated business:', vessel.vesselBusiness);
+        
+        // Check if any of the fields are empty
+        if (!updatedVesselName || !updatedVesselEconomy || !updatedVesselBusiness) {
+          alert('All fields must be filled out');
+          return;
+        }
+        
+        // Update the document with the corresponding ID in the "Vessels" collection
+        await setDoc(doc(db, 'Vessel', vessel.id), {
+          vesselName: updatedVesselName,
+          vesselEconomy: updatedVesselEconomy,
+          vesselBusiness: updatedVesselBusiness
+        });
+        console.log('Vessel updated successfully!');
+        
+        // Update the vessel object in the array
+        vessels[index] = {
+          id: vessel.id,
+          vesselName: updatedVesselName,
+          vesselEconomy: updatedVesselEconomy,
+          vesselBusiness: updatedVesselBusiness
+        };
+        
+        // Call a function to display the updated vessels in an HTML table
+        displayVesselsInTable(vessels);
+      } catch (error) {
+        console.error('Error updating vessel:', error);
+      }
+    }
+
+    // Get the form element
+    const form = document.querySelector('#addVesselModal form');
+    console.log(form);
+
+    // Add an event listener for the submit event
+    form.addEventListener('submit', async (event) => {
+    // Prevent the form from being submitted normally
+    event.preventDefault();
+
+    // Get the values from the form
+    const vesselName = document.getElementById('vesselName').value;
+    const vesselEconomy = document.getElementById('vesselEconomy').value;
+    const vesselBusiness = document.getElementById('vesselBusiness').value;
+
     // Check if any of the fields are empty
-    if (!updatedVesselName || !updatedVesselType || !updatedAffiliation) {
+    if (!vesselName || !vesselEconomy || !vesselBusiness) {
       alert('All fields must be filled out');
       return;
     }
-    
-    // Update the document with the corresponding ID in the "Vessels" collection
-    await setDoc(doc(db, 'Vessel', vessel.id), {
-      vesselName: updatedVesselName,
-      vesselType: updatedVesselType,
-      affiliation: updatedAffiliation
+
+    // Call the addVessel function with the entered data
+    await addVessel(vesselName, vesselEconomy, vesselBusiness);
+
+    // Clear the form
+    form.reset();
+
+    // Fetch the updated list of vessels
+    await fetchVessels();
     });
-    console.log('Vessel updated successfully!');
-    
-    // Update the vessel object in the array
-    vessels[index] = {
-      id: vessel.id,
-      vesselName: updatedVesselName,
-      vesselType: updatedVesselType,
-      affiliation: updatedAffiliation
-    };
-    
-    // Call a function to display the updated vessels in an HTML table
-    displayVesselsInTable(vessels);
-  } catch (error) {
-    console.error('Error updating vessel:', error);
-  }
-}
 
-// Get the form element
-const form = document.querySelector('#addVesselModal form');
-console.log(form);
+    // Fetch the list of vessels when the page loads
+    fetchVessels();
 
-// Add an event listener for the submit event
-form.addEventListener('submit', async (event) => {
-// Prevent the form from being submitted normally
-event.preventDefault();
+    // test search
+    var searchFor = "vesselName";
+    var searchVal = "Zhuming";
+    searchVessels(searchFor, searchVal);
 
-// Get the values from the form
-const vesselName = document.getElementById('vesselName').value;
-const vesselType = document.getElementById('vesselType').value;
-const affiliation = document.getElementById('vesselAffiliation').value;
-
-// Check if any of the fields are empty
-if (!vesselName || !vesselType || !affiliation) {
-  alert('All fields must be filled out');
-  return;
-}
-
-// Call the addVessel function with the entered data
-await addVessel(vesselName, vesselType, affiliation);
-
-// Clear the form
-form.reset();
-
-// Fetch the updated list of vessels
-await fetchVessels();
-});
-
-// Fetch the list of vessels when the page loads
-fetchVessels();
-
-// test search
-var searchFor = "vesselName";
-var searchVal = "Zhuming";
-searchVessels(searchFor, searchVal);
-
-// Collection reference for routes
-const routesColRef = collection(db, 'Route');
+    // Collection reference for routes
+    const routesColRef = collection(db, 'Route');
 
 // Function to add a new route to Firestore
 async function addRoute(vesselName, location, destination) {

@@ -34,7 +34,7 @@
                         <span class="link_name">Bookings</span>
                     </a>
                 </li>
-                <li class="active">
+                <li>
                     <a href="vessels.html">
                         <i class='bx bxs-ship'></i>
                         <span class="link_name">Vessels</span>
@@ -53,7 +53,7 @@
                     </a>
                 </li>
 
-                <li>
+                <li class="active">
                     <a href="travelFare.html">
                         <i class='bx bx-coin-stack'></i>
                         <span class="link_name">Travel Fare</span>
@@ -109,41 +109,27 @@
                 </div>
             </nav>
 
-           <!-- Vessels Table -->
-            <div class="container mt-5 position-relative">
-                <h2>Vessels</h2> <br><br><br>
-            
-                <button id="addVessel" class="btn btn-primary position-absolute" style="right: 20px;">Add +</button>
-
-                <div class="search-bar position-absolute" style="left: 20px; display: flex; align-items: center;">
-                    <select id="searchType" class="form-select">
-                      <option value="vesselName">Vessel Name</option>
-                      <option value="vesselEconomy">Economy</option>
-                      <option value="vesselBusiness">Business</option>
-                    </select>
-
-                    <div style="display: flex; align-items: center; position: relative;">
-                      <input type="text" id="searchBox" class="form-control" style="width: 150px; padding-left: 30px;" placeholder="Search...">
-                      <i class="bx bx-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%);"></i>
-                    </div>
-
-                    <button id="searchButton" class="btn btn-primary">Search</button>
-                </div>
-
-                <br><br>
+           <!-- Travel Fares Table -->
+           <div class="container mt-5 position-relative">
+            <h2>Travel Fare</h2> <br><br>
+        
+            <div class="card">
+                <div class="card-body">
+                    <button id="addFare" class="btn btn-primary mb-3 position-absolute" style="top: -40px; right: 20px;">Add +</button>
                 <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
-                    <table id="vesselsTable" class="table table-bordered table-condensed table-striped">
+                    <table id="fareTable" class="table table-bordered table-condensed table-striped">
                         <thead>
                         <tr>
                             <th>Vessel Name</th>
+                            <th>Route</th>
                             <th>Economy</th>
                             <th>Business</th>
                             <th>Action</th>
                         </tr>
                         </thead>
-                        <tbody id="vesselsTbody">
+                        <tbody id="fareTbody">
                         <!-- Rows will be added dynamically here -->
                         </tbody>
                     </table>
@@ -152,29 +138,33 @@
                 </div>
             </div>
 
-            <!-- Add Vessel Modal -->
-            <div class="modal fade" id="addVesselModal" tabindex="-1" role="dialog" aria-labelledby="addVesselModalLabel" aria-hidden="true">
+            <!-- Add Travel Fare Modal -->
+            <div class="modal fade" id="addFareModal" tabindex="-1" role="dialog" aria-labelledby="addFareModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="addVesselModalLabel">Add Vessel</h5>
+                            <h5 class="modal-title" id="addFareModalLabel">Add Travel Fare</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form id="addVesselForm">
+                            <form id="addFareForm">
                                 <div class="form-group">
                                     <label for="vesselName" class="col-form-label">Vessel Name:</label>
-                                    <input type="text" class="form-control" id="vesselName">
+                                    <input type="text" class="form-control" id="fareName">
                                 </div>
                                 <div class="form-group">
-                                    <label for="bedEconomy" class="col-form-label">Economy:</label>
-                                    <input type="text" class="form-control" id="vesselEconomy">
+                                    <label for="route" class="col-form-label">Route:</label>
+                                    <input type="text" class="form-control" id="route">
                                 </div>
                                 <div class="form-group">
-                                    <label for="bedBusiness" class="col-form-label">Business:</label>
-                                    <input type="text" class="form-control" id="vesselBusiness">
+                                    <label for="economy" class="col-form-label">Economy:</label>
+                                    <input type="text" class="form-control" id="economy">
+                                </div>
+                                <div class="form-group">
+                                    <label for="business" class="col-form-label">Business:</label>
+                                    <input type="text" class="form-control" id="business">
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -184,6 +174,73 @@
                     </div>
                 </div>
             </div>
+        </div>    
+            <!-- Discount Fares Table -->
+           <div class="container mt-5 position-relative">
+            <h2>Discount Fare</h2> <br><br>
+        
+            <div class="card">
+                <div class="card-body">
+                    <button id="addDiscFare" class="btn btn-primary mb-3 position-absolute" style="top: -40px; right: 20px;">Add +</button>
+                <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                    <table id="discFareTable" class="table table-bordered table-condensed table-striped">
+                        <thead>
+                        <tr>
+                            <th>Discount Type</th>
+                            <th>Age</th>
+                            <th>Discount Percent</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody id="discFareTbody">
+                        <!-- Rows will be added dynamically here -->
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            
+            <!-- Add Discount Fare Modal -->
+            <div class="modal fade" id="addDiscFareModal" tabindex="-1" role="dialog" aria-labelledby="addDiscFareModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addDiscFareModalLabel">Add Discount Fare</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addDiscFareForm">
+                                <div class="form-group">
+                                    <label for="discountType" class="col-form-label">Discount Type:</label>
+                                    <select class="form-control" id="discountType">
+                                        <option value="Senior">Senior</option>
+                                        <option value="Student">Student</option>
+                                        <option value="PWD">PWD</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="age" class="col-form-label">Age:</label>
+                                    <input type="text" class="form-control" id="age">
+                                </div>
+                                <div class="form-group">
+                                    <label for="discPercent" class="col-form-label">Discount Percent:</label>
+                                    <input type="text" class="form-control" id="discPercent">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
     <script>
         // Add click event listener to logo-details
         $('.logo-details').click(function() {
@@ -192,12 +249,18 @@
 
         // Wait for the document to be ready
         $(document).ready(function() {
-        // Add a click event listener to the button
-        $("#addVessel").click(function() {
-            // Open the modal using jQuery
-            $("#addVesselModal").modal("show");
-        });
-        });
+                    // Add a click event listener to the addFare button
+                    $("#addFare").click(function() {
+                        // Open the addFareModal using jQuery
+                        $("#addFareModal").modal("show");
+                    });
+
+                    // Add a click event listener to the addDiscFare button
+                    $("#addDiscFare").click(function() {
+                        // Open the addDiscFareModal using jQuery
+                        $("#addDiscFareModal").modal("show");
+                    });
+                });
     </script>
     <script src="bundle.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
