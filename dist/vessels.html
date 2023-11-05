@@ -184,6 +184,39 @@
                     </div>
                 </div>
             </div>
+
+            <div class="modal fade" id="editVesselModal" tabindex="-1" role="dialog" aria-labelledby="editVesselModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editVesselModalLabel">Edit Vessel</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editVesselForm">
+                                <div class="form-group">
+                                    <label for="vesselName" class="col-form-label">Vessel Name:</label>
+                                    <input type="text" class="form-control" id="editVesselName">
+                                    <input type="hidden" class="form-control" id="editVesselID">
+                                </div>
+                                <div class="form-group">
+                                    <label for="bedEconomy" class="col-form-label">Economy:</label>
+                                    <input type="text" class="form-control" id="editVesselEconomy">
+                                </div>
+                                <div class="form-group">
+                                    <label for="bedBusiness" class="col-form-label">Business:</label>
+                                    <input type="text" class="form-control" id="editVesselBusiness">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
     <script>
         // Add click event listener to logo-details
         $('.logo-details').click(function() {
@@ -193,10 +226,11 @@
         // Wait for the document to be ready
         $(document).ready(function() {
         // Add a click event listener to the button
-        $("#addVessel").click(function() {
-            // Open the modal using jQuery
-            $("#addVesselModal").modal("show");
-        });
+            $("#addVessel").click(function() {
+                // Open the modal using jQuery
+                $("#addVesselModal").modal("show");
+
+            });
         });
     </script>
     <script src="bundle.js"></script>
