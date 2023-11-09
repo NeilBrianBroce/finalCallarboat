@@ -21,66 +21,83 @@ export function bookingFunctions() {
 
     // Initialize Firestore
     const db = getFirestore();
+
+    const bookingColRef = collection(db, 'Medallion-BookedTicket');
   
     // Function to retrieve data and populate the table
     async function populateBookings() {
-      const querySnapshot = await getDocs(collection(db, 'Medallion-BookedTickets'));
+    
       const tbody = document.getElementById('tbody1');
   
       // Clear existing table rows
       tbody.innerHTML = '';
+
+      try {
+        const orderedQuery  = query(bookingColRef, orderBy('Date', 'desc'));
+        const bookings = [];
+
+        getDocs(orderedQuery)
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            var data = doc.data();
+            bookings.push(data); // Add the data to the array
+
+            const row = document.createElement('tr');
+
+            // Create table cells for each column
+            const cell1 = document.createElement('td');
+            cell1.textContent = data.AccomType;
+            row.appendChild(cell1);
+
+            const cell2 = document.createElement('td');
+            cell2.textContent = data.Age;
+            row.appendChild(cell2);
+
+            const cell3 = document.createElement('td');
+            cell3.textContent = data.Date;
+            row.appendChild(cell3);
+
+            const cell4 = document.createElement('td');
+            cell4.textContent = data.Destination;
+            row.appendChild(cell4);
+
+            const cell5 = document.createElement('td');
+            cell5.textContent = data.Gender;
+            row.appendChild(cell5);
+
+            const cell6 = document.createElement('td');
+            cell6.textContent = data.ImageUrl;
+            row.appendChild(cell6);
+
+            const cell7 = document.createElement('td');
+            cell7.textContent = data.Location;
+            row.appendChild(cell7);
+
+            const cell8 = document.createElement('td');
+            cell8.textContent = data.Name;
+            row.appendChild(cell8);
+
+            const cell9 = document.createElement('td');
+            cell9.textContent = data.TicketType;
+            row.appendChild(cell9);
+
+            const cell10 = document.createElement('td');
+            cell10.textContent = data.User;
+            row.appendChild(cell10);
+
+            // Append the row to the tbody
+            tbody.appendChild(row);
+          });
+        })
+        .catch((error) => {
+          console.error('Error getting documents: ', error);
+        });
+      } catch (error) {
+        console.error('Error fetching booking:', error);
+      }
   
-      // Loop through the documents and create table rows
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        const bookingUniqueID = uuidv4(); 
-        const row = document.createElement('tr');
-
-      // Create table cells for each column
-      const cell1 = document.createElement('td');
-      cell1.textContent = data.AccomType;
-      row.appendChild(cell1);
-
-      const cell2 = document.createElement('td');
-      cell2.textContent = data.Age;
-      row.appendChild(cell2);
-
-      const cell3 = document.createElement('td');
-      cell3.textContent = data.Date;
-      row.appendChild(cell3);
-
-      const cell4 = document.createElement('td');
-      cell4.textContent = data.Destination;
-      row.appendChild(cell4);
-
-      const cell5 = document.createElement('td');
-      cell5.textContent = data.Gender;
-      row.appendChild(cell5);
-
-      const cell6 = document.createElement('td');
-      cell6.textContent = data.ImageUrl;
-      row.appendChild(cell6);
-
-      const cell7 = document.createElement('td');
-      cell7.textContent = data.Location;
-      row.appendChild(cell7);
-
-      const cell8 = document.createElement('td');
-      cell8.textContent = data.Name;
-      row.appendChild(cell8);
-
-      const cell9 = document.createElement('td');
-      cell9.textContent = data.TicketType;
-      row.appendChild(cell9);
-
-      const cell10 = document.createElement('td');
-      cell10.textContent = data.User;
-      row.appendChild(cell10);
-
-      // Append the row to the tbody
-      tbody.appendChild(row);
-    });
-  }
+   
+    }
 
   // Call the function to retrieve data and populate the table
   populateBookings();
