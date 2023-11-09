@@ -191,27 +191,27 @@ export function routeFunctions() {
           $("#editRouteID").val(route.route_id);
           $("#editVesselID").val(route.vessel_id);
 
-        const select  = document.getElementById('editVesselID');
+          const select  = document.getElementById('editVesselID');
 
-        const orderedQuery  = query(vesselsColRef, orderBy('vessel_name', 'asc'));
+          const orderedQuery  = query(vesselsColRef, orderBy('vessel_name', 'asc'));
 
-        getDocs(orderedQuery)
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            const option = document.createElement('option');
-            option.value = data.vessel_id; // Set the value attribute of the option
-            option.text = data.vessel_name;  // Set the text content of the option
-            if(data.vessel_id == route.vessel_id){
-                option.selected = true;
-            }
-            select.appendChild(option);
-            
+          getDocs(orderedQuery)
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              const option = document.createElement('option');
+              option.value = data.vessel_id; // Set the value attribute of the option
+              option.text = data.vessel_name;  // Set the text content of the option
+              if(data.vessel_id == route.vessel_id){
+                  option.selected = true;
+              }
+              select.appendChild(option);
+              
+            });
+          })
+          .catch((error) => {
+            console.error('Error getting documents: ', error);
           });
-        })
-        .catch((error) => {
-          console.error('Error getting documents: ', error);
-        });
 
         });
 

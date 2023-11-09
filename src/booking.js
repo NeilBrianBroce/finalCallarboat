@@ -4,6 +4,7 @@ import { getStorage, ref, getDownloadURL } from '../node_modules/firebase/storag
 
 export function bookingFunctions() {
     const { v4: uuidv4 } = require('uuid');
+    const moment = require('moment');
 
     const firebaseConfig = {
       apiKey: "AIzaSyAUWz7jfrt46iBvAnZ-AESn8kNmqtbTlmw",
@@ -54,15 +55,19 @@ export function bookingFunctions() {
         row.appendChild(cell3);
 
         const cell4 = document.createElement('td');
-        const date = new Date(data.dateIssued);
-        const formattedDate = date.toLocaleDateString('en-US', {
-          month: '2-digit',
-          day: '2-digit',
-          year: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-        });
+        // const date = new Date(data.dateIssued);
+        // const formattedDate = date.toLocaleDateString('en-US', {
+        //   month: '2-digit',
+        //   day: '2-digit',
+        //   year: '2-digit',
+        //   hour: '2-digit',
+        //   minute: '2-digit',
+        //   second: '2-digit',
+        // });
+
+        const date = data.dateIssued.toDate();
+        const formattedDate = moment(date).format('MMMM DD, YYYY HH:mm:ss');
+
         cell4.textContent = formattedDate;
         row.appendChild(cell4);
 
@@ -75,58 +80,37 @@ export function bookingFunctions() {
         row.appendChild(cell6);
 
         const cell7 = document.createElement('td');
-        const imageIcon = document.createElement('img');
-        imageIcon.src = data.ImageUrl;
-        imageIcon.style.width = '50px';
-        imageIcon.style.height = '50px';
 
-        imageIcon.addEventListener('click', async () => {
-          // Show bigger version of the image in a modal
-          const downloadURL = await getDownloadURL(ref(storage, data.ImageUrl));
+        const viewIDButton = document.createElement('button');
+        viewIDButton.textContent = 'View ID';
+        viewIDButton.classList.add('btn', 'btn-primary');
+        viewIDButton.addEventListener('click', function (event) {
+          $("#viewIDModal").modal("show");
+          var modalBody = document.getElementById('viewIDModalBody');
+          var img = document.createElement('img');
+          img.style.width = '100%';
+          img.src=data.ImageUrl;
+          modalBody.appendChild(img);
 
-          // Create a modal backdrop to handle multiple modals
-          const modalBackdrop = document.createElement('div');
-          modalBackdrop.classList.add('modal-backdrop', 'fade');
-          document.body.appendChild(modalBackdrop);
+          const approveButton = document.createElement('button');
+          approveButton.textContent = 'Approve';
+          approveButton.classList.add('btn', 'btn-success');
+          approveButton.addEventListener('click', function (event) {
+            // approveButton()
+          });
 
-          const imageModal = document.createElement('div');
-          imageModal.classList.add('modal', 'fade', 'show');
-          const modalId = `imageModal-${uuidv4()}`;
-          imageModal.id = modalId;
+          const disapproveButton = document.createElement('button');
+          disapproveButton.textContent = 'Disapprove';
+          disapproveButton.classList.add('btn', 'btn-danger');
+          disapproveButton.addEventListener('click', function (event) {
+            // disapproveButton()
+          });
 
-          const modalDialog = document.createElement('div');
-          modalDialog.classList.add('modal-dialog', 'modal-dialog-centered', 'modal-lg');
-          imageModal.appendChild(modalDialog);
+          modalBody.appendChild(approveButton);
+          modalBody.appendChild(disapproveButton);
+        })
 
-          const modalContent = document.createElement('div');
-          modalContent.classList.add('modal-content');
-          modalDialog.appendChild(modalContent);
-
-          const modalBody = document.createElement('div');
-          modalBody.classList.add('modal-body', 'text-center');
-          modalContent.appendChild(modalBody);
-
-          const biggerImage = document.createElement('img');
-          biggerImage.src = downloadURL;
-          biggerImage.classList.add('img-fluid');
-          modalBody.appendChild(biggerImage);
-
-          document.body.appendChild(imageModal);
-
-          // Close the modal and remove the backdrop when closed
-          const closeModal = () => {
-            imageModal.classList.remove('show');
-            modalBackdrop.remove();
-          };
-
-          // Handle modal close when the backdrop is clicked
-          modalBackdrop.addEventListener('click', closeModal);
-
-          // Close the modal when the modal itself is clicked
-          imageModal.addEventListener('click', closeModal);
-        });
-
-        cell7.appendChild(imageIcon);
+        cell7.appendChild(viewIDButton);
         row.appendChild(cell7);
 
         const cell8 = document.createElement('td');
