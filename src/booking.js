@@ -38,7 +38,7 @@ export function bookingFunctions() {
       const querySnapshot = await getDocs(orderedQuery);
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-
+        console.log(data);
         const row = document.createElement('tr');
 
         // Create table cells for each column
@@ -55,16 +55,6 @@ export function bookingFunctions() {
         row.appendChild(cell3);
 
         const cell4 = document.createElement('td');
-        // const date = new Date(data.dateIssued);
-        // const formattedDate = date.toLocaleDateString('en-US', {
-        //   month: '2-digit',
-        //   day: '2-digit',
-        //   year: '2-digit',
-        //   hour: '2-digit',
-        //   minute: '2-digit',
-        //   second: '2-digit',
-        // });
-
         const date = data.dateIssued.toDate();
         const formattedDate = moment(date).format('MMMM DD, YYYY HH:mm:ss');
 
@@ -92,22 +82,37 @@ export function bookingFunctions() {
           img.src=data.ImageUrl;
           modalBody.appendChild(img);
 
-          const approveButton = document.createElement('button');
-          approveButton.textContent = 'Approve';
-          approveButton.classList.add('btn', 'btn-success');
-          approveButton.addEventListener('click', function (event) {
-            // approveButton()
-          });
-
-          const disapproveButton = document.createElement('button');
-          disapproveButton.textContent = 'Disapprove';
-          disapproveButton.classList.add('btn', 'btn-danger');
-          disapproveButton.addEventListener('click', function (event) {
-            // disapproveButton()
-          });
-
-          modalBody.appendChild(approveButton);
-          modalBody.appendChild(disapproveButton);
+          if(data.status == "pending"){
+            const approveButton = document.createElement('button');
+            approveButton.textContent = 'Approve';
+            approveButton.classList.add('btn', 'btn-success');
+            approveButton.addEventListener('click', function (event) {
+              approveBooking(data.booking_id)
+            });
+  
+            const disapproveButton = document.createElement('button');
+            disapproveButton.textContent = 'Disapprove';
+            disapproveButton.classList.add('btn', 'btn-danger');
+            disapproveButton.addEventListener('click', function (event) {
+              disapproveBooking(data.booking_id)
+            });
+  
+            modalBody.appendChild(approveButton);
+            modalBody.appendChild(disapproveButton);
+          }else{
+            if(data.status == "Approved"){
+              const approveButton = document.createElement('button');
+              approveButton.textContent = 'Approved';
+              approveButton.classList.add('btn', 'btn-success');
+              modalBody.appendChild(approveButton);
+            }else{
+              const disapproveButton = document.createElement('button');
+              disapproveButton.textContent = 'Disapproved';
+              disapproveButton.classList.add('btn', 'btn-danger');
+              modalBody.appendChild(disapproveButton);
+            }
+            
+          }
         })
 
         cell7.appendChild(viewIDButton);
@@ -134,35 +139,36 @@ export function bookingFunctions() {
         row.appendChild(cell12);
 
         const cell13 = document.createElement('td');
-        const statusDropdown = document.createElement('select');
+        // const statusDropdown = document.createElement('select');
 
         // Create options for the dropdown
-        const approvedOption = document.createElement('option');
-        approvedOption.value = 'approved';
-        approvedOption.textContent = 'Approved';
+        // const approvedOption = document.createElement('option');
+        // approvedOption.value = 'approved';
+        // approvedOption.textContent = 'Approved';
 
-        const cancelledOption = document.createElement('option');
-        cancelledOption.value = 'cancelled';
-        cancelledOption.textContent = 'Cancelled';
+        // const cancelledOption = document.createElement('option');
+        // cancelledOption.value = 'cancelled';
+        // cancelledOption.textContent = 'Cancelled';
 
-        // Set the initial selected option based on data.status
-        if (data.status === 'approved') {
-          approvedOption.selected = true;
-        } else if (data.status === 'cancelled') {
-          cancelledOption.selected = true;
-        }
+        // // Set the initial selected option based on data.status
+        // if (data.status === 'approved') {
+        //   approvedOption.selected = true;
+        // } else if (data.status === 'cancelled') {
+        //   cancelledOption.selected = true;
+        // }
 
-        // Add event listener to update the status in the Firestore database
-        statusDropdown.addEventListener('change', () => {
-          const newStatus = statusDropdown.value;
-          // Update the status in the Firestore database here
-        });
+        // // Add event listener to update the status in the Firestore database
+        // statusDropdown.addEventListener('change', () => {
+        //   const newStatus = statusDropdown.value;
+        //   // Update the status in the Firestore database here
+        // });
 
-        // Add options to the dropdown
-        statusDropdown.appendChild(approvedOption);
-        statusDropdown.appendChild(cancelledOption);
+        // // Add options to the dropdown
+        // statusDropdown.appendChild(approvedOption);
+        // statusDropdown.appendChild(cancelledOption);
 
-        cell13.appendChild(statusDropdown);
+        // cell13.appendChild(statusDropdown);
+        cell13.textContent = data.status;
         row.appendChild(cell13);
 
 
@@ -171,6 +177,61 @@ export function bookingFunctions() {
     } catch (error) {
       console.error('Error retrieving bookings: ', error);
     }
+  }
+
+  async function approveBooking(booking_id){
+    console.log("approve: ", booking_id)
+    const dataToUpdate = {
+      status: "Approved",
+    };
+
+    const getRoute = query(bookingColRef, where('booking_id', '==', booking_id));
+
+    getDocs(getRoute)
+      .then((querySnapshot) => {
+        if (!querySnapshot.empty) {
+          const doc = querySnapshot.docs[0]; 
+          const bookingDocRef = doc.ref;
+          return setDoc(bookingDocRef, dataToUpdate, { merge: true });
+        } else {
+          console.log('Document not found');
+        }
+      })
+      .then(() => {
+        console.log('Document updated successfully');
+        $("#viewIDModal").modal("hide");
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+
+  }
+
+  async function disapproveBooking(booking_id){
+    const dataToUpdate = {
+      status: "Disapproved",
+    };
+
+    const getRoute = query(bookingColRef, where('booking_id', '==', booking_id));
+
+    getDocs(getRoute)
+      .then((querySnapshot) => {
+        if (!querySnapshot.empty) {
+          const doc = querySnapshot.docs[0]; 
+          const bookingDocRef = doc.ref;
+          return setDoc(bookingDocRef, dataToUpdate, { merge: true });
+        } else {
+          console.log('Document not found');
+        }
+      })
+      .then(() => {
+        console.log('Document updated successfully');
+        $("#viewIDModal").modal("hide");
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+
   }
 
   populateBookings();
