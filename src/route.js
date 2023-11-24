@@ -19,17 +19,14 @@ export function routeFunctions() {
     }
 
     //init firebase app
-    initializeApp(firebaseConfig)
-
+    const app = initializeApp(firebaseConfig)
+    console.log("APP",app);
     //init services
     const db = getFirestore()
     const routeColRef = collection(db, 'Vessel_Route');
     const vesselsColRef = collection(db, 'Vessel');
-    const storage = getStorage();
-    const storageRef = ref(storage, 'some-child');
-    uploadBytes(storageRef, Places).then((snapshot) => {
-       console.log('Uploaded a blob or file!');
-    });
+    const storage = getStorage(app);
+    console.log("storage", storage)
 
     let route = [];
 
@@ -58,40 +55,52 @@ export function routeFunctions() {
       populateVessel();
 
     //Function to upload an image 
-   async function uploadImage(file) {
-    try {
-      // Create a storage reference
-      const storageRef = ref(storage, `places/${file.name}`);
+     //Function to upload an image 
+     async function uploadImage(file, routeUniqueID) {
+      // Create a new Image object
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+     
+      // Wait for the image to load
+      await new Promise(resolve => img.onload = resolve);
+     
+      // Create a canvas and draw the image onto it
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = 300; // Set the width of the canvas
+      canvas.height = 300; // Set the height of the canvas
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+     
+      // Convert the canvas to a Blob
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, file.type));
+     
+      // Create a new File from the Blob
+      const resizedFile = new File([blob], file.name, {type: file.type});
+     
+      // Now you can upload the resized image to Firebase
+      const storageRef = ref(storage, '/Places/' + routeUniqueID + resizedFile.name);
+      const uploadTask = uploadBytes(storageRef, resizedFile);
+     
+      try {
+        // Wait for the upload task to complete
+        const snapshot = await uploadTask;
+     
+        // You can monitor the upload progress here if needed
+        console.log('Image uploaded successfully!');
+     
+        // Get the download URL
+        const downloadURL = await getDownloadURL(storageRef);
+        console.log('Download URL:', downloadURL);
+     
+        // Return the download URL
+        return downloadURL;
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        // Handle the error or rethrow it if needed
+        throw error;
+      }
+     }
    
-      // Create an upload task
-      const uploadTask = uploadBytesResumable(storageRef, file);
-   
-      // Monitor the upload task
-      uploadTask.on('state_changed', 
-        (snapshot) => {
-          // You can monitor the upload progress here
-        }, 
-        (error) => {
-          // Handle unsuccessful uploads
-          console.error('Upload failed:', error);
-        }, 
-        async () => {
-          // Handle successful uploads
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          return downloadURL;
-        }
-      );
-    } catch (error) {
-      console.error('Error uploading image:', error);
-    }
-   }
-   
-   //get uploaded URL of image 
-   uploadBytes(storageRef, file).then((snapshot) => {
-     snapshot.ref.getDownloadURL().then((downloadURL) => {
-       console.log('File available at', downloadURL);
-     });
-    });
 
     // Function to add a new route to Firestore
     async function addRoute(vesselID, routeName, routeLocation, routeDestination, file) {
@@ -112,7 +121,10 @@ export function routeFunctions() {
           if (!querySnapshot.empty) {
             throw new Error('Data already exists');
           } else {
-            const imageURL = await uploadImage(file);
+
+
+            const imageURL = await uploadImage(file, routeUniqueID);
+            console.log("IMAGEURL", imageURL)
             addDoc(routeColRef, {
               route_id: routeUniqueID,
               vessel_id: vesselID,
@@ -176,7 +188,7 @@ export function routeFunctions() {
           });
 
           // Now, the "route" array contains the ordered documents
-          console.log("searvhRoutes", searvhRoutes);
+          // console.log("searvhRoutes", searvhRoutes);
         })
         .catch((error) => {
           console.error('Error getting documents: ', error);
@@ -201,7 +213,7 @@ export function routeFunctions() {
         // Create table cells for each data field
         const routeImageCell = document.createElement('td');
         const routeImage = document.createElement('img');
-        routeImage.src = await getImageURL(route.route_image); // use the getImageURL function to get the image URL
+        routeImage.src = route.route_image; // use the getImageURL function to get the image URL
         routeImageCell.appendChild(routeImage);
         row.appendChild(routeImageCell);
 
@@ -393,6 +405,7 @@ export function routeFunctions() {
         const routeDestination = document.getElementById('routeDestination').value;
         const routeLocation = document.getElementById('routeLocation').value;
         const file = document.getElementById('routeImage').files[0];
+        console.log("FILE UPLOADED: ", file)
   
         // Check if any of the fields are empty
         if (!routeName || !vesselID || !routeDestination || !routeLocation || !file) {
@@ -404,10 +417,10 @@ export function routeFunctions() {
         await addRoute(vesselID, routeName, routeLocation, routeDestination, file);
   
         // Clear the form
-        addRouteForm.reset();
+        // addRouteForm.reset();
   
         // Fetch the updated list of route
-        await fetchRoutes();
+        // await fetchRoutes();
       });
   }
 
