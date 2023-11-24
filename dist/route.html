@@ -22,7 +22,7 @@
             </div>
             <ul class="nav-links">
                 <li>
-                    <a href="agency-dashboard.html" id="dashboard-link">
+                    <a href="index.html" id="dashboard-link">
                         <i class='bx bx-grid-alt'></i>
                         <span class="link_name">Dashboard</span>
                     </a>
@@ -123,10 +123,12 @@
                     <table id="routesTable" class="table table-bordered table-condensed table-striped">
                         <thead>
                         <tr>
+                            <th>Route Image</th>
                             <th>Vessel Name</th>
                             <th>Route Name</th>
                             <th>Location</th>
                             <th>Destination</th>
+                            <th>Fare Price</th>
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -150,6 +152,10 @@
                         </button>
                     </div>
                     <div class="modal-body">
+                        <div class="form-group">
+                            <label for="routeImage" class="col-form-label">Route Image:</label>
+                            <input type="file" class="form-control-file" id="routeImage">
+                         </div>
                         <form id="addRoutesForm">
                             <div class="form-group">
                                 <label for="vesselName" class="col-form-label">Vessel Name:</label>
@@ -169,6 +175,10 @@
                             <div class="form-group">
                                 <label for="destination" class="col-form-label">Destination:</label>
                                 <input type="text" class="form-control" id="routeDestination">
+                            </div>
+                            <div class="form-group">
+                                <label for="farePrice" class="col-form-label">Fare Price:</label>
+                                <input type="text" class="form-control" id="farePrice">
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">Submit</button>

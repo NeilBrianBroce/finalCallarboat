@@ -139,35 +139,6 @@ export function bookingFunctions() {
         row.appendChild(cell12);
 
         const cell13 = document.createElement('td');
-        // const statusDropdown = document.createElement('select');
-
-        // Create options for the dropdown
-        // const approvedOption = document.createElement('option');
-        // approvedOption.value = 'approved';
-        // approvedOption.textContent = 'Approved';
-
-        // const cancelledOption = document.createElement('option');
-        // cancelledOption.value = 'cancelled';
-        // cancelledOption.textContent = 'Cancelled';
-
-        // // Set the initial selected option based on data.status
-        // if (data.status === 'approved') {
-        //   approvedOption.selected = true;
-        // } else if (data.status === 'cancelled') {
-        //   cancelledOption.selected = true;
-        // }
-
-        // // Add event listener to update the status in the Firestore database
-        // statusDropdown.addEventListener('change', () => {
-        //   const newStatus = statusDropdown.value;
-        //   // Update the status in the Firestore database here
-        // });
-
-        // // Add options to the dropdown
-        // statusDropdown.appendChild(approvedOption);
-        // statusDropdown.appendChild(cancelledOption);
-
-        // cell13.appendChild(statusDropdown);
         cell13.textContent = data.status;
         row.appendChild(cell13);
 

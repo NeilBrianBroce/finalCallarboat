@@ -1,6 +1,6 @@
 import {initializeApp} from '../node_modules/firebase/app'
 import { getFirestore, collection, getDocs, addDoc, getDoc, query, where, orderBy, doc, deleteDoc, setDoc } from '../node_modules/firebase/firestore';
-
+import { getStorage, ref, getDownloadURL } from '../node_modules/firebase/storage';
 
 export function routeFunctions() {
     const { v4: uuidv4 } = require('uuid');
@@ -49,28 +49,67 @@ export function routeFunctions() {
       // Call the populateVessel function to fill the dropdown
       populateVessel();
 
-    
-    // Function to add a new route to Firestore
-    async function addRoute(vesselID, routeName, routeLocation, routeDestination) {
-      try {
+    //Function to upload an image 
+    async function uploadImage(file) {
+      const storage = getStorage();
+      const storageRef = ref(storage, 'places/' + file.name);
+      const uploadTask = uploadBytesResumable(storageRef, file);
 
+      uploadTask.on('state_changed', 
+       (snapshot) => {
+         // Observe state change events such as progress, pause, and resume
+         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+         console.log('Upload is ' + progress + '% done');
+         switch (snapshot.state) {
+           case firebase.storage.TaskState.PAUSED: // or 'paused'
+             console.log('Upload is paused');
+             break;
+           case firebase.storage.TaskState.RUNNING: // or 'running'
+             console.log('Upload is running');
+             break;
+         }
+       }, 
+       (error) => {
+         // Handle unsuccessful uploads
+       }, 
+       () => {
+         // Handle successful uploads on complete
+         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+         uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+           console.log('File available at', downloadURL);
+           return downloadURL;
+         });
+       }
+      );
+  }
+    // Function to add a new route to Firestore
+    async function addRoute(vesselID, routeName, routeLocation, routeDestination, file) {
+      try {
         // Add a new document to the "Routes" collection with the entered data
         const routeUniqueID = uuidv4();
-
+     
+        // Fetch the vessel_name using the vessel_id
+        const vesselName = await getVesselName(vesselID);
+     
         // Add checker if route_name already exists
         const queryWithSearch = query(routeColRef, where("route_name", '==', routeName), where("vessel_id", '==', vesselID));
-
+     
         getDocs(queryWithSearch)
-        .then((querySnapshot) => {
+        .then(async (querySnapshot) => {
           if (!querySnapshot.empty) {
             throw new Error('Data already exists');
           } else {
+            const imageURL = await uploadImage(file);
             addDoc(routeColRef, {
               route_id: routeUniqueID,
               vessel_id: vesselID,
+              vessel_name: vesselName, // Add the vessel_name to the document
               route_name: routeName,
               route_location: routeLocation,
-              route_destination: routeDestination
+              route_destination: routeDestination,
+              fare_price : farePrice,
+              route_image: imageURL
             });
             console.log('Route added successfully!');
             $("#addRouteModal").modal("hide");
@@ -79,46 +118,38 @@ export function routeFunctions() {
       } catch (error) {
         console.error('Error adding route:', error);
       }
-    }
-
-    async function fetchRoutes() {
+     }
+     
+     async function fetchRoutes() {
       try {
-        const orderedQuery  = query(routeColRef, orderBy('route_name', 'asc'));
-        const route = [];
-
-        getDocs(orderedQuery)
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            var data = doc.data();
-            data.vessel_name = getVesselName(data.vessel_id);
-            route.push(data); // Add the data to the array
-          });
-
+          const orderedQuery = query(routeColRef, orderBy('route_name', 'asc'));
+          const route = [];
+     
+          const querySnapshot = await getDocs(orderedQuery);
+          for (const doc of querySnapshot.docs) {
+              var data = doc.data();
+              route.push(data); // Add the data to the array
+          }
+     
           // Now, the "route" array contains the ordered documents
           console.log(route);
           displayRoutesInTable(route);
-        })
-        .catch((error) => {
-          console.error('Error getting documents: ', error);
-        });
       } catch (error) {
-        console.error('Error fetching route:', error);
+          console.error('Error fetching route:', error);
       }
-    }
+     }
+     
 
-
-    function getVesselName(vesselID){
-        const getVessel = query(vesselsColRef, where('vessel_id', '==', vesselID));
-        getDocs(getVessel)
-          .then((querySnapshot) => {
-            if (!querySnapshot.empty) {
-              // If a document matching the search criteria is found, update it
-              const doc = querySnapshot.docs[0]; // Get the first document (assuming it's unique)
-              const data = doc.data().vessel_name;
-              return data;
-            }
-          })
-    }
+    async function getVesselName(vesselID){
+      const getVessel = query(vesselsColRef, where('vessel_id', '==', vesselID));
+      const querySnapshot = await getDocs(getVessel);
+      if (!querySnapshot.empty) {
+          // If a document matching the search criteria is found, update it
+          const doc = querySnapshot.docs[0]; // Get the first document (assuming it's unique)
+          const data = doc.data().vessel_name;
+          return data;
+      }
+  }
 
     async function searchRoutes(searchFor, searchVal) {
       try {
@@ -152,12 +183,18 @@ export function routeFunctions() {
       tbody.innerHTML = '';
 
       // Iterate over the route array and create table rows
-      route.forEach((route, index) => {
+      route.forEach(async (route, index) => {
         const row = document.createElement('tr');
 
         // Create table cells for each data field
+        const routeImageCell = document.createElement('td');
+        const routeImage = document.createElement('img');
+        routeImage.src = await getImageURL(route.route_image); // use the getImageURL function to get the image URL
+        routeImageCell.appendChild(routeImage);
+        row.appendChild(routeImageCell);
+
         const vesselNameCell = document.createElement('td');
-        vesselNameCell.textContent = route.vessel_id;
+        vesselNameCell.textContent = route.vessel_name;
         row.appendChild(vesselNameCell);
 
         const routeNameCell = document.createElement('td');
@@ -171,6 +208,10 @@ export function routeFunctions() {
         const routeDestinationCell = document.createElement('td');
         routeDestinationCell.textContent = route.route_destination;
         row.appendChild(routeDestinationCell);
+
+        const farePriceCell = document.createElement('td');
+        farePriceCell.textContent = route.fare_price;
+        row.appendChild(farePriceCell);
 
         // Create Action cell
         const actionCell = document.createElement('td');
@@ -327,36 +368,36 @@ export function routeFunctions() {
     const addRouteForm = document.querySelector('#addRouteModal form');
 
     if(addRouteForm){
-        console.log(addRouteForm);
+      console.log(addRouteForm);
 
-        // Add an event listener for the submit event
-        addRouteForm.addEventListener('submit', async (event) => {
-          // Prevent the form from being submitted normally
-          event.preventDefault();
-    
-          // Get the values from the form
-          const routeName = document.getElementById('routeName').value;
-          const vesselID = document.getElementById('vesselID').value;
-          const routeDestination = document.getElementById('routeDestination').value;
-          const routeLocation = document.getElementById('routeLocation').value;
-    
-          // Check if any of the fields are empty
-          if (!routeName || !vesselID || !routeDestination || !routeLocation) {
-            alert('All fields must be filled out');
-            return;
-          }
-    
-          // Call the addRoute function with the entered data
-          await addRoute(vesselID, routeName, routeLocation, routeDestination);
-    
-          // Clear the form
-          addRouteForm.reset();
-    
-          // Fetch the updated list of route
-          await fetchRoutes();
-        });
-    }
-    
+      // Add an event listener for the submit event
+      addRouteForm.addEventListener('submit', async (event) => {
+        // Prevent the form from being submitted normally
+        event.preventDefault();
+  
+        // Get the values from the form
+        const routeName = document.getElementById('routeName').value;
+        const vesselID = document.getElementById('vesselID').value;
+        const routeDestination = document.getElementById('routeDestination').value;
+        const routeLocation = document.getElementById('routeLocation').value;
+        const file = document.getElementById('routeImage').files[0];
+  
+        // Check if any of the fields are empty
+        if (!routeName || !vesselID || !routeDestination || !routeLocation || !file) {
+          alert('All fields must be filled out');
+          return;
+        }
+  
+        // Call the addRoute function with the entered data
+        await addRoute(vesselID, routeName, routeLocation, routeDestination, file);
+  
+        // Clear the form
+        addRouteForm.reset();
+  
+        // Fetch the updated list of route
+        await fetchRoutes();
+      });
+  }
 
     const editRouteForm = document.querySelector('#editRouteModal form');
 
@@ -401,7 +442,7 @@ export function routeFunctions() {
     searchRoutes(searchFor, searchVal);
 
     // Collection reference for routes
-    const routesColRef = collection(db, 'Route');
+    const routesColRef = collection(db, 'Vessel_Route');
 
 
 }
