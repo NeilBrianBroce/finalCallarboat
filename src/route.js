@@ -1,6 +1,8 @@
 import {initializeApp} from '../node_modules/firebase/app'
 import { getFirestore, collection, getDocs, addDoc, getDoc, query, where, orderBy, doc, deleteDoc, setDoc } from '../node_modules/firebase/firestore';
-import { getStorage, ref, getDownloadURL } from '../node_modules/firebase/storage';
+import { ref, uploadBytesResumable, getDownloadURL } from "../node_modules/firebase/storage";
+import { getStorage, uploadBytes } from "../node_modules/firebase/storage";
+
 
 export function routeFunctions() {
     const { v4: uuidv4 } = require('uuid');
@@ -23,6 +25,12 @@ export function routeFunctions() {
     const db = getFirestore()
     const routeColRef = collection(db, 'Vessel_Route');
     const vesselsColRef = collection(db, 'Vessel');
+    const storage = getStorage();
+    const storageRef = ref(storage, 'some-child');
+    uploadBytes(storageRef, Places).then((snapshot) => {
+       console.log('Uploaded a blob or file!');
+    });
+
     let route = [];
 
     async function populateVessel() {
@@ -50,39 +58,41 @@ export function routeFunctions() {
       populateVessel();
 
     //Function to upload an image 
-    async function uploadImage(file) {
-      const storage = getStorage();
-      const storageRef = ref(storage, 'places/' + file.name);
+   async function uploadImage(file) {
+    try {
+      // Create a storage reference
+      const storageRef = ref(storage, `places/${file.name}`);
+   
+      // Create an upload task
       const uploadTask = uploadBytesResumable(storageRef, file);
-
+   
+      // Monitor the upload task
       uploadTask.on('state_changed', 
-       (snapshot) => {
-         // Observe state change events such as progress, pause, and resume
-         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-         console.log('Upload is ' + progress + '% done');
-         switch (snapshot.state) {
-           case firebase.storage.TaskState.PAUSED: // or 'paused'
-             console.log('Upload is paused');
-             break;
-           case firebase.storage.TaskState.RUNNING: // or 'running'
-             console.log('Upload is running');
-             break;
-         }
-       }, 
-       (error) => {
-         // Handle unsuccessful uploads
-       }, 
-       () => {
-         // Handle successful uploads on complete
-         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-         uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-           console.log('File available at', downloadURL);
-           return downloadURL;
-         });
-       }
+        (snapshot) => {
+          // You can monitor the upload progress here
+        }, 
+        (error) => {
+          // Handle unsuccessful uploads
+          console.error('Upload failed:', error);
+        }, 
+        async () => {
+          // Handle successful uploads
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          return downloadURL;
+        }
       );
-  }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+   }
+   
+   //get uploaded URL of image 
+   uploadBytes(storageRef, file).then((snapshot) => {
+     snapshot.ref.getDownloadURL().then((downloadURL) => {
+       console.log('File available at', downloadURL);
+     });
+    });
+
     // Function to add a new route to Firestore
     async function addRoute(vesselID, routeName, routeLocation, routeDestination, file) {
       try {
@@ -94,6 +104,8 @@ export function routeFunctions() {
      
         // Add checker if route_name already exists
         const queryWithSearch = query(routeColRef, where("route_name", '==', routeName), where("vessel_id", '==', vesselID));
+        const farePriceInput = document.getElementById('farePrice');
+        const farePrice = farePriceInput.value;
      
         getDocs(queryWithSearch)
         .then(async (querySnapshot) => {
@@ -104,7 +116,7 @@ export function routeFunctions() {
             addDoc(routeColRef, {
               route_id: routeUniqueID,
               vessel_id: vesselID,
-              vessel_name: vesselName, // Add the vessel_name to the document
+              vessel_name: vesselName,
               route_name: routeName,
               route_location: routeLocation,
               route_destination: routeDestination,
