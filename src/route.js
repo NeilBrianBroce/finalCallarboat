@@ -55,21 +55,43 @@ export function routeFunctions() {
       populateVessel();
 
     //Function to upload an image 
-    async function uploadImage(file, routeUniqueID) {
-      const storageRef = ref(storage, '/Places/' + routeUniqueID + file.name);
-      const uploadTask = uploadBytes(storageRef, file);
-    
+     //Function to upload an image 
+     async function uploadImage(file, routeUniqueID) {
+      // Create a new Image object
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+     
+      // Wait for the image to load
+      await new Promise(resolve => img.onload = resolve);
+     
+      // Create a canvas and draw the image onto it
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = 300; // Set the width of the canvas
+      canvas.height = 300; // Set the height of the canvas
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+     
+      // Convert the canvas to a Blob
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, file.type));
+     
+      // Create a new File from the Blob
+      const resizedFile = new File([blob], file.name, {type: file.type});
+     
+      // Now you can upload the resized image to Firebase
+      const storageRef = ref(storage, '/Places/' + routeUniqueID + resizedFile.name);
+      const uploadTask = uploadBytes(storageRef, resizedFile);
+     
       try {
         // Wait for the upload task to complete
         const snapshot = await uploadTask;
-    
+     
         // You can monitor the upload progress here if needed
         console.log('Image uploaded successfully!');
-    
+     
         // Get the download URL
         const downloadURL = await getDownloadURL(storageRef);
         console.log('Download URL:', downloadURL);
-    
+     
         // Return the download URL
         return downloadURL;
       } catch (error) {
@@ -77,8 +99,7 @@ export function routeFunctions() {
         // Handle the error or rethrow it if needed
         throw error;
       }
-
-   }
+     }
    
 
     // Function to add a new route to Firestore
