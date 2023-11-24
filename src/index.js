@@ -2,6 +2,7 @@ import { vesselFunctions } from './vessel.js';
 import { routeFunctions } from './route.js';
 import { scheduleFunctions } from './schedule.js';
 import { bookingFunctions } from './booking.js';
+import { scannerFunctions } from './account.js';
 
 const moduleSelected = document.getElementById('moduleSelected');
 const moduleSelectedValue = moduleSelected.value;
@@ -22,4 +23,8 @@ if (moduleSelectedValue == "schedule") {
 
 if (moduleSelectedValue == "booking") {
   bookingFunctions();
+}
+
+if (moduleSelectedValue == "scanner") {
+  scannerFunctions();
 }
