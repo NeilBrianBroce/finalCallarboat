@@ -1,8 +1,6 @@
 import {initializeApp} from '../node_modules/firebase/app'
 import { getFirestore, collection, getDocs, addDoc, getDoc, query, where, orderBy, doc, deleteDoc, setDoc } from '../node_modules/firebase/firestore';
-import { ref, uploadBytesResumable, getDownloadURL } from "../node_modules/firebase/storage";
-import { getStorage, uploadBytes } from "../node_modules/firebase/storage";
-
+import { ref, uploadBytesResumable, getDownloadURL, getStorage, uploadBytes, deleteObject } from "../node_modules/firebase/storage";
 
 export function routeFunctions() {
     const { v4: uuidv4 } = require('uuid');
@@ -56,42 +54,66 @@ export function routeFunctions() {
 
     //Function to upload an image 
      //Function to upload an image 
-     async function uploadImage(file, routeUniqueID) {
-      // Create a new Image object
-      const img = new Image();
-      img.src = URL.createObjectURL(file);
+    //  async function uploadImage(file, routeUniqueID) {
+    //   // Create a new Image object
+    //   const img = new Image();
+    //   img.src = URL.createObjectURL(file);
      
-      // Wait for the image to load
-      await new Promise(resolve => img.onload = resolve);
+    //   // Wait for the image to load
+    //   await new Promise(resolve => img.onload = resolve);
      
-      // Create a canvas and draw the image onto it
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      canvas.width = 100; // Set the width of the canvas
-      canvas.height = 100; // Set the height of the canvas
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    //   // Create a canvas and draw the image onto it
+    //   const canvas = document.createElement('canvas');
+    //   const ctx = canvas.getContext('2d');
+    //   canvas.width = 100; // Set the width of the canvas
+    //   canvas.height = 100; // Set the height of the canvas
+    //   ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
      
-      // Convert the canvas to a Blob
-      const blob = await new Promise(resolve => canvas.toBlob(resolve, file.type));
+    //   // Convert the canvas to a Blob
+    //   const blob = await new Promise(resolve => canvas.toBlob(resolve, file.type));
      
-      // Create a new File from the Blob
-      const resizedFile = new File([blob], file.name, {type: file.type});
+    //   // Create a new File from the Blob
+    //   const resizedFile = new File([blob], file.name, {type: file.type});
      
-      // Now you can upload the resized image to Firebase
-      const storageRef = ref(storage, '/Places/' + routeUniqueID + resizedFile.name);
-      const uploadTask = uploadBytes(storageRef, resizedFile);
+    //   // Now you can upload the resized image to Firebase
+    //   const storageRef = ref(storage, '/Places/' + routeUniqueID + resizedFile.name);
+    //   const uploadTask = uploadBytes(storageRef, resizedFile);
      
+    //   try {
+    //     // Wait for the upload task to complete
+    //     const snapshot = await uploadTask;
+     
+    //     // You can monitor the upload progress here if needed
+    //     console.log('Image uploaded successfully!');
+     
+    //     // Get the download URL
+    //     const downloadURL = await getDownloadURL(storageRef);
+    //     console.log('Download URL:', downloadURL);
+     
+    //     // Return the download URL
+    //     return downloadURL;
+    //   } catch (error) {
+    //     console.error('Error uploading image:', error);
+    //     // Handle the error or rethrow it if needed
+    //     throw error;
+    //   }
+    //  }
+
+    async function uploadImage(file, routeUniqueID) {
+      const storageRef = ref(storage, '/Places/' + routeUniqueID + file.name);
+      const uploadTask = uploadBytes(storageRef, file);
+
       try {
         // Wait for the upload task to complete
         const snapshot = await uploadTask;
-     
+
         // You can monitor the upload progress here if needed
         console.log('Image uploaded successfully!');
-     
+
         // Get the download URL
         const downloadURL = await getDownloadURL(storageRef);
         console.log('Download URL:', downloadURL);
-     
+
         // Return the download URL
         return downloadURL;
       } catch (error) {
@@ -99,11 +121,12 @@ export function routeFunctions() {
         // Handle the error or rethrow it if needed
         throw error;
       }
-     }
+
+   }
    
 
     // Function to add a new route to Firestore
-    async function addRoute(vesselID, routeName, routeLocation, routeDestination, file) {
+    async function addRoute(vesselID, routeName, routeLocation, routeDestination, file, farePrice) {
       try {
         // Add a new document to the "Routes" collection with the entered data
         const routeUniqueID = uuidv4();
@@ -113,16 +136,14 @@ export function routeFunctions() {
      
         // Add checker if route_name already exists
         const queryWithSearch = query(routeColRef, where("route_name", '==', routeName), where("vessel_id", '==', vesselID));
-        const routeNameInput = document.getElementById('routeName');
-        const routeName = routeNameInput.value;
+        // const routeNameInput = document.getElementById('routeName');
+        // const routeName = routeNameInput.value;
      
         getDocs(queryWithSearch)
         .then(async (querySnapshot) => {
           if (!querySnapshot.empty) {
             throw new Error('Data already exists');
           } else {
-
-
             const imageURL = await uploadImage(file, routeUniqueID);
             console.log("IMAGEURL", imageURL)
             addDoc(routeColRef, {
@@ -212,10 +233,22 @@ export function routeFunctions() {
 
         // Create table cells for each data field
         const routeImageCell = document.createElement('td');
-        const routeImage = document.createElement('img');
-        routeImage.src = route.route_image; // use the getImageURL function to get the image URL
-        routeImageCell.appendChild(routeImage);
+        const routeImageButton = document.createElement('button');
+        routeImageButton.textContent = 'View Route Image';
+        routeImageButton.classList.add('btn', 'btn-primary');
+        routeImageButton.addEventListener('click', function (event) {
+          $("#viewRouteImageModal").modal("show");
+          var modalBody = document.getElementById('viewRouteImageModalBody');
+          var img = document.createElement('img');
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.src=route.route_image;
+          modalBody.appendChild(img);
+        })
+
+        routeImageCell.appendChild(routeImageButton);
         row.appendChild(routeImageCell);
+
 
         const vesselNameCell = document.createElement('td');
         vesselNameCell.textContent = route.vessel_name;
@@ -316,10 +349,20 @@ export function routeFunctions() {
                   if (!querySnapshot.empty) {
                     // If a document matching the search criteria is found, delete it
                     const doc = querySnapshot.docs[0]; // Get the first document (assuming it's unique)
+                    const routeData = doc.data();
                     const routeDocRef = doc.ref;
 
-                    // Use deleteDoc to delete the document
-                    return deleteDoc(routeDocRef);
+                    const imageRef = ref(storage,routeData.route_image);
+                    console.log("imageRef", imageRef);
+                    // Delete the image
+                    deleteObject(imageRef)
+                      .then(() => {
+                        // Use deleteDoc to delete the document
+                        return deleteDoc(routeDocRef);
+                      })
+                      .catch((error) => {
+                        console.error('Error deleting image:', error.message);
+                      });
                   } else {
                     console.log('Document not found');
                   }
@@ -404,17 +447,18 @@ export function routeFunctions() {
         const vesselID = document.getElementById('vesselID').value;
         const routeDestination = document.getElementById('routeDestination').value;
         const routeLocation = document.getElementById('routeLocation').value;
+        const farePrice = document.getElementById('farePrice').value;
         const file = document.getElementById('routeImage').files[0];
         console.log("FILE UPLOADED: ", file)
   
         // Check if any of the fields are empty
-        if (!routeName || !vesselID || !routeDestination || !routeLocation || !file) {
+        if (!routeName || !vesselID || !routeDestination || !routeLocation || !file || !farePrice) {
           alert('All fields must be filled out');
           return;
         }
   
         // Call the addRoute function with the entered data
-        await addRoute(vesselID, routeName, routeLocation, routeDestination, file);
+        await addRoute(vesselID, routeName, routeLocation, routeDestination, file, farePrice);
   
         // Clear the form
         // addRouteForm.reset();

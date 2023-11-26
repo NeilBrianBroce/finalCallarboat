@@ -3,6 +3,7 @@ import { routeFunctions } from './route.js';
 import { scheduleFunctions } from './schedule.js';
 import { bookingFunctions } from './booking.js';
 import { scannerFunctions } from './account.js';
+import { travelFareFunctions } from './travelFare.js';
 
 const moduleSelected = document.getElementById('moduleSelected');
 const moduleSelectedValue = moduleSelected.value;
@@ -27,4 +28,8 @@ if (moduleSelectedValue == "booking") {
 
 if (moduleSelectedValue == "scanner") {
   scannerFunctions();
+}
+
+if (moduleSelectedValue == "travelFare") {
+  travelFareFunctions();
 }

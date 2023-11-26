@@ -83,41 +83,40 @@ export function scheduleFunctions() {
 
     async function fetchSchedules() {
       try {
-        const orderedQuery  = query(scheduleColRef, orderBy('schedule_name', 'asc'));
+        const orderedQuery = query(scheduleColRef, orderBy('schedule_name', 'asc'));
         const schedule = [];
-
-        getDocs(orderedQuery)
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            var data = doc.data();
-            data.vessel_name = getVesselName(data.vessel_id);
-            schedule.push(data); // Add the data to the array
-          });
-
-          // Now, the "schedule" array contains the ordered documents
-          console.log(schedule);
-          displaySchedulesInTable(schedule);
-        })
-        .catch((error) => {
-          console.error('Error getting documents: ', error);
-        });
+    
+        const querySnapshot = await getDocs(orderedQuery);
+    
+        for (const doc of querySnapshot.docs) {
+          const data = doc.data();
+          data.vessel_name = await getVesselName(data.vessel_id); 
+          console.log(data.vessel_name);
+          schedule.push(data);
+        }
+    
+        console.log(schedule);
+        displaySchedulesInTable(schedule);
       } catch (error) {
         console.error('Error fetching schedule:', error);
       }
     }
-
-
-    function getVesselName(vesselID){
+    
+    async function getVesselName(vesselID) {
+      try {
         const getVessel = query(vesselsColRef, where('vessel_id', '==', vesselID));
-        getDocs(getVessel)
-          .then((querySnapshot) => {
-            if (!querySnapshot.empty) {
-              // If a document matching the search criteria is found, update it
-              const doc = querySnapshot.docs[0]; // Get the first document (assuming it's unique)
-              const data = doc.data().vessel_name;
-              return data;
-            }
-          })
+        const querySnapshot = await getDocs(getVessel);
+    
+        if (!querySnapshot.empty) {
+          const doc = querySnapshot.docs[0];
+          return doc.data().vessel_name;
+        }
+    
+        return null;
+      } catch (error) {
+        console.error('Error getting vessel name:', error);
+        throw error;
+      }
     }
 
     async function searchSchedules(searchFor, searchVal) {

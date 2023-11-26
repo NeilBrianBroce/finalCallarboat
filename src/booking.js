@@ -79,6 +79,7 @@ export function bookingFunctions() {
           var modalBody = document.getElementById('viewIDModalBody');
           var img = document.createElement('img');
           img.style.width = '100%';
+          img.style.height = '100%';
           img.src=data.ImageUrl;
           modalBody.appendChild(img);
 

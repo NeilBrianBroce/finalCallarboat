@@ -112,7 +112,7 @@
            <!-- Travel Fares Table -->
            <div class="container mt-5 position-relative">
             <h2>Travel Fare</h2> <br><br>
-        
+            <input type="hidden" id="moduleSelected" value="travelFare">
             <div class="card">
                 <div class="card-body">
                     <button id="addFare" class="btn btn-primary mb-3 position-absolute" style="top: -40px; right: 20px;">Add +</button>
@@ -151,12 +151,16 @@
                         <div class="modal-body">
                             <form id="addFareForm">
                                 <div class="form-group">
-                                    <label for="vesselName" class="col-form-label">Vessel Name:</label>
-                                    <input type="text" class="form-control" id="fareName">
+                                    <label for="routeName" class="col-form-label">Route Name:</label>
+                                    <select id="routeID" class="form-select">
+                                        <option value="" disabled selected>Select a Route</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="route" class="col-form-label">Route:</label>
-                                    <input type="text" class="form-control" id="route">
+                                    <label for="vesselName" class="col-form-label">Vessel Name:</label>
+                                    <select id="vesselID" class="form-select">
+                                        <option value="" disabled selected>Select a Vessel</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="economy" class="col-form-label">Economy:</label>
