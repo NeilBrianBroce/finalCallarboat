@@ -55,7 +55,7 @@ export function bookingFunctions() {
         row.appendChild(cell3);
 
         const cell4 = document.createElement('td');
-        cell3.textContent = data.Destination;
+        cell4.textContent = data.Destination;
         row.appendChild(cell4);
 
         const cell5 = document.createElement('td');
@@ -70,7 +70,7 @@ export function bookingFunctions() {
         row.appendChild(cell6);
 
         const cell7 = document.createElement('td');
-        cell6.textContent = data.TicketType;
+        cell7.textContent = data.TicketType;
         row.appendChild(cell7);
 
         const cell8 = document.createElement('td');
@@ -96,7 +96,7 @@ export function bookingFunctions() {
             });
   
             const disapproveButton = document.createElement('button');
-            disapproveButton.textContent = 'Disapprove';
+            disapproveButton.textContent = 'Cancel';
             disapproveButton.classList.add('btn', 'btn-danger');
             disapproveButton.addEventListener('click', function (event) {
               disapproveBooking(data.bookID)
@@ -112,7 +112,7 @@ export function bookingFunctions() {
               modalBody.appendChild(approveButton);
             }else{
               const disapproveButton = document.createElement('button');
-              disapproveButton.textContent = 'Disapproved';
+              disapproveButton.textContent = 'Cancelled';
               disapproveButton.classList.add('btn', 'btn-danger');
               modalBody.appendChild(disapproveButton);
             }
@@ -185,7 +185,7 @@ export function bookingFunctions() {
 
   async function disapproveBooking(bookID){
     const dataToUpdate = {
-      status: "Disapproved",
+      status: "Cancelled",
     };
 
     const getRoute = query(bookingColRef, where('bookID', '==', bookID));
