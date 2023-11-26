@@ -39,6 +39,40 @@ export function travelFareFunctions() {
     })
 
 
+    document.querySelector('#editVesselID').addEventListener('change', async function() {
+      var routeSelect = document.getElementById("editRouteID");
+      routeSelect.innerHTML = '';
+
+      var vesselID = this.value;
+      try {
+        getRoutesEdit(vesselID);
+      } catch (error) {
+        console.error('Error in getRoutes:', error);
+      }
+    })
+
+    async function getRoutesEdit(vessel_id) {
+      const select  = document.getElementById('editRouteID');
+
+      const orderedQuery  = query(routeColRef, where("vessel_id", '==', vessel_id));
+      const vessels = [];
+
+      getDocs(orderedQuery)
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const option = document.createElement('option');
+          option.value = data.route_id; // Set the value attribute of the option
+          option.text = data.route_name;  // Set the text content of the option
+          select.appendChild(option);
+        });
+      })
+      .catch((error) => {
+        console.error('Error getting documents: ', error);
+      });
+    }
+
+
 
     async function getRoutes(vessel_id) {
         const select  = document.getElementById('routeID');
@@ -109,7 +143,7 @@ export function travelFareFunctions() {
               business: parseFloat(business)
             });
             console.log('TravelFare added successfully!');
-            $("#addTravelFareModal").modal("hide");
+            $("#addFareModal").modal("hide");
           }
         })
       } catch (error) {
@@ -130,7 +164,6 @@ export function travelFareFunctions() {
             data.route_name = await getRouteName(data.route_id);
             travelFare.push(data);
           }
-          console.log(travelFare);
           displayTravelFaresInTable(travelFare);
         }
       } catch (error) {
@@ -185,7 +218,6 @@ export function travelFareFunctions() {
           });
 
           // Now, the "travelFare" array contains the ordered documents
-          console.log("searvhTravelFares", searvhTravelFares);
         })
         .catch((error) => {
           console.error('Error getting documents: ', error);
@@ -206,7 +238,6 @@ export function travelFareFunctions() {
       // Iterate over the travelFare array and create table rows
       travelFare.forEach((travelFare, index) => {
         const row = document.createElement('tr');
-        console.log("travelFare", travelFare)
         // Create table cells for each data field
         const vesselNameCell = document.createElement('td');
         vesselNameCell.textContent = travelFare.vessel_name;
@@ -236,36 +267,62 @@ export function travelFareFunctions() {
         actionCell.appendChild(editButton);
 
         editButton.addEventListener('click', function (event) {
-          $("#editTravelFareModal").modal("show");
-          $("#editTravelFareFirstTrip").val(travelFare.travelFare_first_trip);
-          $("#editTravelFareName").val(travelFare.travelFare_name);
-          $("#editTravelFareSecondTrip").val(travelFare.travelFare_second_trip);
-          $("#editTravelFareID").val(travelFare.travelFare_id);
+          $("#editFareModal").modal("show");
           $("#editVesselID").val(travelFare.vessel_id);
+          $("#editFareID").val(travelFare.travelFare_id);
+          $("#editRouteID").val(travelFare.route_id);
+          $("#editEconomy").val(travelFare.economy);
+          $("#editBusiness").val(travelFare.business);
 
-        const select  = document.getElementById('editVesselID');
+                
+       
+          const select  = document.getElementById('editVesselID');
+          select.innerHTML = "";
+          const orderedQuery  = query(vesselsColRef, orderBy('vessel_name', 'asc'));
 
-        const orderedQuery  = query(vesselsColRef, orderBy('vessel_name', 'asc'));
-
-        getDocs(orderedQuery)
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            const option = document.createElement('option');
-            option.value = data.vessel_id; // Set the value attribute of the option
-            option.text = data.vessel_name;  // Set the text content of the option
-            if(data.vessel_id == travelFare.vessel_id){
-                option.selected = true;
-            }
-            select.appendChild(option);
-            
+          getDocs(orderedQuery)
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              const option = document.createElement('option');
+              option.value = data.vessel_id; // Set the value attribute of the option
+              option.text = data.vessel_name;  // Set the text content of the option
+              if(data.vessel_id == travelFare.vessel_id){
+                  option.selected = true;
+              }
+              select.appendChild(option);
+              
+            });
+          })
+          .catch((error) => {
+            console.error('Error getting documents: ', error);
           });
-        })
-        .catch((error) => {
-          console.error('Error getting documents: ', error);
-        });
+
+          const selectRoute  = document.getElementById('editRouteID');
+          selectRoute.innerHTML = "";
+          const orderedRouteQuery  = query(routeColRef, where('vessel_id', '==', travelFare.vessel_id));
+
+          getDocs(orderedRouteQuery)
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              const option = document.createElement('option');
+              option.value = data.route_id; // Set the value attribute of the option
+              option.text = data.route_name;  // Set the text content of the option
+              if(data.route_id == travelFare.route_id){
+                  option.selected = true;
+              }
+              selectRoute.appendChild(option);
+              
+            });
+          })
+          .catch((error) => {
+            console.error('Error getting documents: ', error);
+          });
 
         });
+
+       
 
         // Create Delete button
         const deleteButton = document.createElement('button');
@@ -327,25 +384,18 @@ export function travelFareFunctions() {
       }
     }
 
-    async function editTravelFare(travelFareID, vesselID, travelFareName, travelFareFirstTrip, travelFareSecondTrip) {
-        console.log(travelFareID)
-        console.log(vesselID)
-        console.log(travelFareName)
-        console.log(travelFareSecondTrip)
-        console.log(travelFareFirstTrip)
+    async function editTravelFare(travelFareID, vesselID, routeID, business, economy) {
       try {
         // Check if any of the fields are empty
-        if (!vesselID || !travelFareName || !travelFareSecondTrip || !travelFareFirstTrip) {
-          alert('All fields must be filled out');
-          return;
-        }
-
         const dataToUpdate = {
             vessel_id: vesselID,
-            travelFare_name: travelFareName,
-            travelFare_first_trip: travelFareFirstTrip,
-            travelFare_second_trip: travelFareSecondTrip
+            route_id: routeID,
+            business: parseFloat(business),
+            economy: parseFloat(economy)
         };
+
+        console.log("travelFareID", travelFareID)
+        console.log("dataToUpdate", dataToUpdate)
 
         const getTravelFare = query(travelFareColRef, where('travelFare_id', '==', travelFareID));
 
@@ -364,7 +414,7 @@ export function travelFareFunctions() {
           })
           .then(() => {
             console.log('Document updated successfully');
-            $("#editTravelFareModal").modal("hide");
+            $("#editFareModal").modal("hide");
 
           })
           .catch((error) => {
@@ -379,8 +429,6 @@ export function travelFareFunctions() {
     const addTravelFareForm = document.querySelector('#addFareModal form');
 
     if(addTravelFareForm){
-        console.log(addTravelFareForm);
-
         // Add an event listener for the submit event
         addTravelFareForm.addEventListener('submit', async (event) => {
           // Prevent the form from being submitted normally
@@ -410,7 +458,7 @@ export function travelFareFunctions() {
     }
     
 
-    const editTravelFareForm = document.querySelector('#editTravelFareModal form');
+    const editTravelFareForm = document.querySelector('#editFareModal form');
 
     if(editTravelFareForm){
         // Add an event listener for the submit event
@@ -419,20 +467,20 @@ export function travelFareFunctions() {
           event.preventDefault();
     
           // Get the values from the form
-          const travelFareID = document.getElementById('editTravelFareID').value;
-          const travelFareName = document.getElementById('editTravelFareName').value;
+          const travelFareID = document.getElementById('editFareID').value;
           const vesselID = document.getElementById('editVesselID').value;
-          const travelFareFirstTrip = document.getElementById('editTravelFareFirstTrip').value;
-          const travelFareSecondTrip = document.getElementById('editTravelFareSecondTrip').value;
+          const routeID = document.getElementById('editRouteID').value;
+          const business = document.getElementById('editBusiness').value;
+          const economy = document.getElementById('editEconomy').value;
     
           // Check if any of the fields are empty
-          if (!travelFareName || !vesselID || !travelFareFirstTrip || !travelFareSecondTrip) {
+          if (!vesselID || !routeID || !business || !economy) {
             alert('All fields must be filled out');
             return;
           }
     
           // Call the addTravelFare function with the entered data
-          await editTravelFare(travelFareID, vesselID, travelFareName, travelFareFirstTrip, travelFareSecondTrip);
+          await editTravelFare(travelFareID, vesselID, routeID, business, economy);
     
           // Clear the form
           editTravelFareForm.reset();

@@ -41,6 +41,40 @@ export function scheduleFunctions() {
     })
 
 
+    document.querySelector('#editVesselID').addEventListener('change', async function() {
+      var routeSelect = document.getElementById("editRouteID");
+      routeSelect.innerHTML = '';
+
+      var vesselID = this.value;
+      try {
+        getRoutesEdit(vesselID);
+      } catch (error) {
+        console.error('Error in getRoutes:', error);
+      }
+    })
+
+
+    async function getRoutesEdit(vessel_id) {
+      const select  = document.getElementById('editRouteID');
+
+      const orderedQuery  = query(routeColRef, where("vessel_id", '==', vessel_id));
+      const vessels = [];
+
+      getDocs(orderedQuery)
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const option = document.createElement('option');
+          option.value = data.route_id; // Set the value attribute of the option
+          option.text = data.route_name;  // Set the text content of the option
+          select.appendChild(option);
+        });
+      })
+      .catch((error) => {
+        console.error('Error getting documents: ', error);
+      });
+    }
+    
 
     async function getRoutes(vessel_id) {
         const select  = document.getElementById('routeID');
@@ -255,49 +289,49 @@ export function scheduleFunctions() {
             checkbox.checked = selectedDays.includes(checkbox.value);
           });
 
-        const select  = document.getElementById('editVesselID');
+          const select  = document.getElementById('editVesselID');
+          select.innerHTML = '';
+          const orderedQuery  = query(vesselsColRef, orderBy('vessel_name', 'asc'));
 
-        const orderedQuery  = query(vesselsColRef, orderBy('vessel_name', 'asc'));
-
-        getDocs(orderedQuery)
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            const option = document.createElement('option');
-            option.value = data.vessel_id; // Set the value attribute of the option
-            option.text = data.vessel_name;  // Set the text content of the option
-            if(data.vessel_id == schedule.vessel_id){
-                option.selected = true;
-            }
-            select.appendChild(option);
-            
+          getDocs(orderedQuery)
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              const option = document.createElement('option');
+              option.value = data.vessel_id; // Set the value attribute of the option
+              option.text = data.vessel_name;  // Set the text content of the option
+              if(data.vessel_id == schedule.vessel_id){
+                  option.selected = true;
+              }
+              select.appendChild(option);
+              
+            });
+          })
+          .catch((error) => {
+            console.error('Error getting documents: ', error);
           });
-        })
-        .catch((error) => {
-          console.error('Error getting documents: ', error);
-        });
 
-        const selectRoute  = document.getElementById('editRouteID');
+          const selectRoute  = document.getElementById('editRouteID');
+          selectRoute.innerHTML = '';
+          const orderedRouteQuery  = query(routeColRef, where('vessel_id', '==', schedule.vessel_id));
 
-        const orderedRouteQuery  = query(routeColRef, orderBy('route_name', 'asc'));
-
-        getDocs(orderedRouteQuery)
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            const option = document.createElement('option');
-            option.value = data.route_id; // Set the value attribute of the option
-            option.text = data.route_name;  // Set the text content of the option
-            if(data.route_id == schedule.route_id){
-                option.selected = true;
-            }
-            selectRoute.appendChild(option);
-            
+          getDocs(orderedRouteQuery)
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              const option = document.createElement('option');
+              option.value = data.route_id; // Set the value attribute of the option
+              option.text = data.route_name;  // Set the text content of the option
+              if(data.route_id == schedule.route_id){
+                  option.selected = true;
+              }
+              selectRoute.appendChild(option);
+              
+            });
+          })
+          .catch((error) => {
+            console.error('Error getting documents: ', error);
           });
-        })
-        .catch((error) => {
-          console.error('Error getting documents: ', error);
-        });
 
         });
 

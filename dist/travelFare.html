@@ -181,6 +181,49 @@
                 </div>
             </div>
         </div>    
+         <!-- Add Travel Fare Modal -->
+            <div class="modal fade" id="editFareModal" tabindex="-1" role="dialog" aria-labelledby="editFareModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editFareModalLabel">Edit Travel Fare</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editFareForm">
+                                <input type="hidden" id="editFareID">
+                                <div class="form-group">
+                                    <label for="editVesselName" class="col-form-label">Vessel Name:</label>
+                                    <select id="editVesselID" class="form-select">
+                                        <option value="" disabled selected>Select a Vessel</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="editRouteName" class="col-form-label">Route Name:</label>
+                                    <select id="editRouteID" class="form-select">
+                                        <option value="" disabled selected>Select a Route</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="editEconomy" class="col-form-label">Economy:</label>
+                                    <input type="text" class="form-control" id="editEconomy">
+                                </div>
+                                <div class="form-group">
+                                    <label for="editBusiness" class="col-form-label">Business:</label>
+                                    <input type="text" class="form-control" id="editBusiness">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Discount Fares Table -->
            <div class="container mt-5 position-relative">
             <h2>Discount Fare</h2> <br><br>
