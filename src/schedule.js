@@ -25,6 +25,46 @@ export function scheduleFunctions() {
     const vesselsColRef = collection(db, 'Vessel');
     let schedule = [];
 
+    const routeColRef = collection(db, 'Vessel_Route');
+    let travelFare = [];
+
+    document.querySelector('#vesselID').addEventListener('change', async function() {
+      var routeSelect = document.getElementById("routeID");
+      routeSelect.innerHTML = '';
+
+      var vesselID = this.value;
+      try {
+        getRoutes(vesselID);
+      } catch (error) {
+        console.error('Error in getRoutes:', error);
+      }
+    })
+
+
+
+    async function getRoutes(vessel_id) {
+        const select  = document.getElementById('routeID');
+
+        const orderedQuery  = query(routeColRef, where("vessel_id", '==', vessel_id));
+        const vessels = [];
+
+        getDocs(orderedQuery)
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const option = document.createElement('option');
+            option.value = data.route_id; // Set the value attribute of the option
+            option.text = data.route_name;  // Set the text content of the option
+            select.appendChild(option);
+          });
+        })
+        .catch((error) => {
+          console.error('Error getting documents: ', error);
+        });
+      }
+      
+
+
     async function populateVessel() {
         const select  = document.getElementById('vesselID');
 
@@ -51,27 +91,28 @@ export function scheduleFunctions() {
 
     
     // Function to add a new schedule to Firestore
-    async function addSchedule(vesselID, scheduleName, scheduleSecondTrip, scheduleFirstTrip) {
+    async function addSchedule(vesselID, routeID, time, availableDays) {
       try {
 
         // Add a new document to the "Schedules" collection with the entered data
         const scheduleUniqueID = uuidv4();
 
         // Add checker if schedule_name already exists
-        const queryWithSearch = query(scheduleColRef, where("schedule_name", '==', scheduleName), where("vessel_id", '==', vesselID));
-
+        const queryWithSearch = query(scheduleColRef, where("vessel_id", '==', vesselID), where("route_id", '==', routeID), where("time", '==', time));
+        var dataInsert = {
+          schedule_id: scheduleUniqueID,
+          vessel_id: vesselID,
+          route_id: routeID,
+          time: time,
+          days: availableDays
+        }
+        console.log(dataInsert);
         getDocs(queryWithSearch)
         .then((querySnapshot) => {
           if (!querySnapshot.empty) {
             throw new Error('Data already exists');
           } else {
-            addDoc(scheduleColRef, {
-              schedule_id: scheduleUniqueID,
-              vessel_id: vesselID,
-              schedule_name: scheduleName,
-              schedule_first_trip: scheduleSecondTrip,
-              schedule_second_trip: scheduleFirstTrip
-            });
+            addDoc(scheduleColRef, dataInsert);
             console.log('Schedule added successfully!');
             $("#addScheduleModal").modal("hide");
           }
@@ -83,15 +124,15 @@ export function scheduleFunctions() {
 
     async function fetchSchedules() {
       try {
-        const orderedQuery = query(scheduleColRef, orderBy('schedule_name', 'asc'));
+        const orderedQuery = query(scheduleColRef, orderBy('time', 'asc'));
         const schedule = [];
     
         const querySnapshot = await getDocs(orderedQuery);
     
         for (const doc of querySnapshot.docs) {
           const data = doc.data();
-          data.vessel_name = await getVesselName(data.vessel_id); 
-          console.log(data.vessel_name);
+          data.vessel_name = await getVesselName(data.vessel_id);
+          data.route_name = await getRouteName(data.route_id);
           schedule.push(data);
         }
     
@@ -115,6 +156,23 @@ export function scheduleFunctions() {
         return null;
       } catch (error) {
         console.error('Error getting vessel name:', error);
+        throw error;
+      }
+    }
+
+    async function getRouteName(routeID) {
+      try {
+        const getVessel = query(routeColRef, where('route_id', '==', routeID));
+        const querySnapshot = await getDocs(getVessel);
+    
+        if (!querySnapshot.empty) {
+          const doc = querySnapshot.docs[0];
+          return doc.data().route_name;
+        }
+    
+        return null;
+      } catch (error) {
+        console.error('Error getting route name:', error);
         throw error;
       }
     }
@@ -155,25 +213,24 @@ export function scheduleFunctions() {
         const row = document.createElement('tr');
 
         // Create table cells for each data field
-        const vesselIDCell = document.createElement('td');
-        vesselIDCell.textContent = schedule.vessel_id;
-        row.appendChild(vesselIDCell);
-
         const vesselNameCell = document.createElement('td');
         vesselNameCell.textContent = schedule.vessel_name;
         row.appendChild(vesselNameCell);
 
-        const scheduleNameCell = document.createElement('td');
-        scheduleNameCell.textContent = schedule.schedule_name;
-        row.appendChild(scheduleNameCell);
+        const routeNameCell = document.createElement('td');
+        routeNameCell.textContent = schedule.route_name;
+        row.appendChild(routeNameCell);
 
-        const scheduleSecondTripCell = document.createElement('td');
-        scheduleSecondTripCell.textContent = schedule.schedule_first_trip;
-        row.appendChild(scheduleSecondTripCell);
+        const timeCell = document.createElement('td');
+        timeCell.textContent = schedule.time;
+        row.appendChild(timeCell);
 
-        const scheduleFirstTripCell = document.createElement('td');
-        scheduleFirstTripCell.textContent = schedule.schedule_second_trip;
-        row.appendChild(scheduleFirstTripCell);
+        const daysAvailableCell = document.createElement('td');
+        daysAvailableCell.textContent = schedule.days;
+        row.appendChild(daysAvailableCell);
+
+
+     
 
         // Create Action cell
         const actionCell = document.createElement('td');
@@ -188,11 +245,15 @@ export function scheduleFunctions() {
 
         editButton.addEventListener('click', function (event) {
           $("#editScheduleModal").modal("show");
-          $("#editScheduleFirstTrip").val(schedule.schedule_first_trip);
-          $("#editScheduleName").val(schedule.schedule_name);
-          $("#editScheduleSecondTrip").val(schedule.schedule_second_trip);
           $("#editScheduleID").val(schedule.schedule_id);
           $("#editVesselID").val(schedule.vessel_id);
+          $("#editRouteID").val(schedule.route_id);
+          $("#editTime").val(schedule.time);
+          var checkboxes = document.querySelectorAll('input[name="editday"]');
+          var selectedDays = schedule.days;
+          checkboxes.forEach(function(checkbox) {
+            checkbox.checked = selectedDays.includes(checkbox.value);
+          });
 
         const select  = document.getElementById('editVesselID');
 
@@ -209,6 +270,28 @@ export function scheduleFunctions() {
                 option.selected = true;
             }
             select.appendChild(option);
+            
+          });
+        })
+        .catch((error) => {
+          console.error('Error getting documents: ', error);
+        });
+
+        const selectRoute  = document.getElementById('editRouteID');
+
+        const orderedRouteQuery  = query(routeColRef, orderBy('route_name', 'asc'));
+
+        getDocs(orderedRouteQuery)
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const option = document.createElement('option');
+            option.value = data.route_id; // Set the value attribute of the option
+            option.text = data.route_name;  // Set the text content of the option
+            if(data.route_id == schedule.route_id){
+                option.selected = true;
+            }
+            selectRoute.appendChild(option);
             
           });
         })
@@ -278,24 +361,15 @@ export function scheduleFunctions() {
       }
     }
 
-    async function editSchedule(scheduleID, vesselID, scheduleName, scheduleFirstTrip, scheduleSecondTrip) {
-        console.log(scheduleID)
-        console.log(vesselID)
-        console.log(scheduleName)
-        console.log(scheduleSecondTrip)
-        console.log(scheduleFirstTrip)
+    async function editSchedule(scheduleID, vesselID, routeID, time, days) {
+
       try {
-        // Check if any of the fields are empty
-        if (!vesselID || !scheduleName || !scheduleSecondTrip || !scheduleFirstTrip) {
-          alert('All fields must be filled out');
-          return;
-        }
 
         const dataToUpdate = {
             vessel_id: vesselID,
-            schedule_name: scheduleName,
-            schedule_first_trip: scheduleFirstTrip,
-            schedule_second_trip: scheduleSecondTrip
+            route_id: routeID,
+            time: time,
+            days: days
         };
 
         const getSchedule = query(scheduleColRef, where('schedule_id', '==', scheduleID));
@@ -330,27 +404,33 @@ export function scheduleFunctions() {
     const addScheduleForm = document.querySelector('#addScheduleModal form');
 
     if(addScheduleForm){
-        console.log(addScheduleForm);
-
         // Add an event listener for the submit event
         addScheduleForm.addEventListener('submit', async (event) => {
           // Prevent the form from being submitted normally
           event.preventDefault();
+
+          var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+          var checkedValues = [];
+    
+          checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+              checkedValues.push(checkbox.value);
+            }
+          });
     
           // Get the values from the form
           const vesselID = document.getElementById('vesselID').value;
-          const scheduleName = document.getElementById('scheduleName').value;
-          const scheduleFirstTrip = document.getElementById('scheduleFirstTrip').value;
-          const scheduleSecondTrip = document.getElementById('scheduleSecondTrip').value;
+          const routeID = document.getElementById('routeID').value;
+          const time = document.getElementById('time').value;
     
           // Check if any of the fields are empty
-          if (!scheduleName || !vesselID || !scheduleFirstTrip || !scheduleSecondTrip) {
+          if (!routeID || !vesselID || !time || !checkedValues) {
             alert('All fields must be filled out');
             return;
           }
     
           // Call the addSchedule function with the entered data
-          await addSchedule(vesselID, scheduleName, scheduleSecondTrip, scheduleFirstTrip);
+          await addSchedule(vesselID, routeID, time, checkedValues);
     
           // Clear the form
           addScheduleForm.reset();
@@ -369,21 +449,31 @@ export function scheduleFunctions() {
           // Prevent the form from being submitted normally
           event.preventDefault();
     
+          var checkboxes = document.querySelectorAll('input[name="editday"]');
+          var checkedValues = [];
+    
+          checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+              checkedValues.push(checkbox.value);
+            }
+          });
+
+          console.log(checkedValues);
+    
           // Get the values from the form
-          const scheduleID = document.getElementById('editScheduleID').value;
-          const scheduleName = document.getElementById('editScheduleName').value;
           const vesselID = document.getElementById('editVesselID').value;
-          const scheduleFirstTrip = document.getElementById('editScheduleFirstTrip').value;
-          const scheduleSecondTrip = document.getElementById('editScheduleSecondTrip').value;
+          const scheduleID = document.getElementById('editScheduleID').value;
+          const routeID = document.getElementById('editRouteID').value;
+          const time = document.getElementById('editTime').value;
     
           // Check if any of the fields are empty
-          if (!scheduleName || !vesselID || !scheduleFirstTrip || !scheduleSecondTrip) {
+          if (!routeID || !vesselID || !time || !checkedValues) {
             alert('All fields must be filled out');
             return;
           }
     
           // Call the addSchedule function with the entered data
-          await editSchedule(scheduleID, vesselID, scheduleName, scheduleFirstTrip, scheduleSecondTrip);
+          await editSchedule(scheduleID, vesselID, routeID, time, checkedValues);
     
           // Clear the form
           editScheduleForm.reset();

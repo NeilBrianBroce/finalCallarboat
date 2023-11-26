@@ -121,11 +121,10 @@
                             <table id="scheduleTable" class="table table-bordered table-condensed table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Vessel ID</th>
                                         <th>Vessel Name</th>
-                                        <th>Schedule Name</th>
-                                        <th>First Trip</th>
-                                        <th>Second Trip</th>
+                                        <th>Route Name</th>
+                                        <th>Time</th>
+                                        <th>Days Available</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -158,17 +157,25 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="scheduleName" class="col-form-label">Schedule Name:</label>
-                                    <input type="text" class="form-control" id="scheduleName">
+                                    <label for="routeName" class="col-form-label">Route Name:</label>
+                                    <select id="routeID" class="form-select">
+                                        <option value="" disabled selected>Select a Route</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="datetimeInput">First Trip:</label>
-                                    <input type="time" id="scheduleFirstTrip" class="form-control">
-                                  </div>
+                                    <label for="datetimeInput">Time:</label>
+                                    <input type="time" id="time" class="form-control">
+                                </div>
                                 <div class="form-group">
-                                    <label for="datetimeInput">Second Trip:</label>
-                                    <input type="time" id="scheduleSecondTrip" class="form-control">
-                                  </div>
+                                    <label for="day" class="col-form-label">Days Available</label> <br/>
+                                    <label><input type="checkbox" name="day" value="Monday"> Monday</label>
+                                    <label><input type="checkbox" name="day" value="Tuesday"> Tuesday</label>
+                                    <label><input type="checkbox" name="day" value="Wednesday"> Wednesday</label>
+                                    <label><input type="checkbox" name="day" value="Thursday"> Thursday</label>
+                                    <label><input type="checkbox" name="day" value="Friday"> Friday</label>
+                                    <label><input type="checkbox" name="day" value="Saturday"> Saturday</label>
+                                    <label><input type="checkbox" name="day" value="Sunday"> Sunday</label>
+                                </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </div>
@@ -198,17 +205,25 @@
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="scheduleName" class="col-form-label">Schedule Name:</label>
-                                                <input type="text" class="form-control" id="editScheduleName">
+                                                <label for="routeName" class="col-form-label">Route Name:</label>
+                                                <select id="editRouteID" class="form-select">
+                                                    <option value="" disabled selected>Select a Route</option>
+                                                </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="datetimeInput">First Trip:</label>
-                                                <input type="time" id="editScheduleFirstTrip" class="form-control">
-                                              </div>
+                                                <label for="datetimeInput">Time:</label>
+                                                <input type="time" id="editTime" class="form-control">
+                                            </div>
                                             <div class="form-group">
-                                                <label for="datetimeInput">Second Trip:</label>
-                                                <input type="time" id="editScheduleSecondTrip" class="form-control">
-                                              </div>
+                                                <label for="day" class="col-form-label">Days Available</label> <br/>
+                                                <label><input type="checkbox" name="editday" value="Monday"> Monday</label>
+                                                <label><input type="checkbox" name="editday" value="Tuesday"> Tuesday</label>
+                                                <label><input type="checkbox" name="editday" value="Wednesday"> Wednesday</label>
+                                                <label><input type="checkbox" name="editday" value="Thursday"> Thursday</label>
+                                                <label><input type="checkbox" name="editday" value="Friday"> Friday</label>
+                                                <label><input type="checkbox" name="editday" value="Saturday"> Saturday</label>
+                                                <label><input type="checkbox" name="editday" value="Sunday"> Sunday</label>
+                                            </div>
                                             <div class="modal-footer">
                                                 <button type="submit" class="btn btn-primary">Submit</button>
                                             </div>
