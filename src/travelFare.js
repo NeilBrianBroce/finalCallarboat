@@ -37,8 +37,8 @@ export function travelFareFunctions() {
           querySnapshot.forEach((doc) => {
             const data = doc.data();
             const option = document.createElement('option');
-            option.value = data.vessel_id; // Set the value attribute of the option
-            option.text = data.vessel_name;  // Set the text content of the option
+            option.value = data.route_id; // Set the value attribute of the option
+            option.text = data.route_name;  // Set the text content of the option
             select.appendChild(option);
           });
         })
