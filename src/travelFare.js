@@ -21,7 +21,7 @@ export function travelFareFunctions() {
 
     //init services
     const db = getFirestore()
-    const travelFareColRef = collection(db, 'Vessel_TravelFare');
+    const travelFareColRef = collection(db, 'Travel_Fare');
     const vesselsColRef = collection(db, 'Vessel');
     const routeColRef = collection(db, 'Vessel_Route');
     let travelFare = [];
@@ -142,7 +142,7 @@ export function travelFareFunctions() {
         console.error('Error fetching travelFare:', error);
       }
     }
-
+   
     // Function to display the travelFare in an HTML table
     function displayTravelFaresInTable(travelFare) {
       // Get the tbody element
@@ -405,7 +405,7 @@ export function travelFareFunctions() {
     searchTravelFares(searchFor, searchVal);
 
     // Collection reference for travelFares
-    const travelFaresColRef = collection(db, 'TravelFare');
+    const travelFaresColRef = collection(db, 'Travel_Fare');
 
 
 }
