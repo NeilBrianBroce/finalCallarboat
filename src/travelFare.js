@@ -21,15 +21,29 @@ export function travelFareFunctions() {
 
     //init services
     const db = getFirestore()
-    const travelFareColRef = collection(db, 'Vessel_TravelFare');
+    const travelFareColRef = collection(db, 'Travel_Fare');
     const vesselsColRef = collection(db, 'Vessel');
     const routeColRef = collection(db, 'Vessel_Route');
     let travelFare = [];
 
-    async function populateRoute() {
+    document.querySelector('#vesselID').addEventListener('change', async function() {
+      var routeSelect = document.getElementById("routeID");
+      routeSelect.innerHTML = '';
+
+      var vesselID = this.value;
+      try {
+        getRoutes(vesselID);
+      } catch (error) {
+        console.error('Error in getRoutes:', error);
+      }
+    })
+
+
+
+    async function getRoutes(vessel_id) {
         const select  = document.getElementById('routeID');
 
-        const orderedQuery  = query(routeColRef, orderBy('route_name', 'asc'));
+        const orderedQuery  = query(routeColRef, where("vessel_id", '==', vessel_id));
         const vessels = [];
 
         getDocs(orderedQuery)
@@ -47,19 +61,40 @@ export function travelFareFunctions() {
         });
       }
       
-      // Call the populateVessel function to fill the dropdown
-      populateRoute();
+
+    async function populateVessel() {
+      const select  = document.getElementById('vesselID');
+
+      const orderedQuery  = query(vesselsColRef, orderBy('vessel_name', 'asc'));
+      const vessels = [];
+
+      getDocs(orderedQuery)
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const option = document.createElement('option');
+          option.value = data.vessel_id; // Set the value attribute of the option
+          option.text = data.vessel_name;  // Set the text content of the option
+          select.appendChild(option);
+        });
+      })
+      .catch((error) => {
+        console.error('Error getting documents: ', error);
+      });
+    }
+    
+    populateVessel();
 
     
     // Function to add a new travelFare to Firestore
-    async function addTravelFare(vesselID, travelFareName, travelFareSecondTrip, travelFareFirstTrip) {
+    async function addTravelFare(vesselID, routeID, economy, business) {
       try {
 
         // Add a new document to the "TravelFares" collection with the entered data
         const travelFareUniqueID = uuidv4();
 
-        // Add checker if travelFare_name already exists
-        const queryWithSearch = query(travelFareColRef, where("travelFare_name", '==', travelFareName), where("vessel_id", '==', vesselID));
+        // Add checker if record already exists
+        const queryWithSearch = query(travelFareColRef, where("vessel_id", '==', vesselID), where("route_id", '==', routeID));
 
         getDocs(queryWithSearch)
         .then((querySnapshot) => {
@@ -69,9 +104,9 @@ export function travelFareFunctions() {
             addDoc(travelFareColRef, {
               travelFare_id: travelFareUniqueID,
               vessel_id: vesselID,
-              travelFare_name: travelFareName,
-              travelFare_first_trip: travelFareSecondTrip,
-              travelFare_second_trip: travelFareFirstTrip
+              route_id: routeID,
+              economy: parseFloat(economy),
+              business: parseFloat(business)
             });
             console.log('TravelFare added successfully!');
             $("#addTravelFareModal").modal("hide");
@@ -84,20 +119,20 @@ export function travelFareFunctions() {
 
     async function fetchTravelFares() {
       try {
-        const orderedQuery = query(travelFareColRef, orderBy('travelFare_name', 'asc'));
+        const orderedQuery = query(travelFareColRef);
         const travelFare = [];
     
         const querySnapshot = await getDocs(orderedQuery);
-    
-        for (const doc of querySnapshot.docs) {
-          const data = doc.data();
-          data.vessel_name = await getVesselName(data.vessel_id); 
-          console.log(data.vessel_name);
-          travelFare.push(data);
+        if(!querySnapshot.empty){
+          for (const doc of querySnapshot.docs) {
+            const data = doc.data();
+            data.vessel_name = await getVesselName(data.vessel_id);
+            data.route_name = await getRouteName(data.route_id);
+            travelFare.push(data);
+          }
+          console.log(travelFare);
+          displayTravelFaresInTable(travelFare);
         }
-    
-        console.log(travelFare);
-        displayTravelFaresInTable(travelFare);
       } catch (error) {
         console.error('Error fetching travelFare:', error);
       }
@@ -116,6 +151,23 @@ export function travelFareFunctions() {
         return null;
       } catch (error) {
         console.error('Error getting vessel name:', error);
+        throw error;
+      }
+    }
+
+    async function getRouteName(routeID) {
+      try {
+        const getVessel = query(routeColRef, where('route_id', '==', routeID));
+        const querySnapshot = await getDocs(getVessel);
+    
+        if (!querySnapshot.empty) {
+          const doc = querySnapshot.docs[0];
+          return doc.data().route_name;
+        }
+    
+        return null;
+      } catch (error) {
+        console.error('Error getting route name:', error);
         throw error;
       }
     }
@@ -142,7 +194,7 @@ export function travelFareFunctions() {
         console.error('Error fetching travelFare:', error);
       }
     }
-
+   
     // Function to display the travelFare in an HTML table
     function displayTravelFaresInTable(travelFare) {
       // Get the tbody element
@@ -154,27 +206,23 @@ export function travelFareFunctions() {
       // Iterate over the travelFare array and create table rows
       travelFare.forEach((travelFare, index) => {
         const row = document.createElement('tr');
-
+        console.log("travelFare", travelFare)
         // Create table cells for each data field
-        const vesselIDCell = document.createElement('td');
-        vesselIDCell.textContent = travelFare.vessel_id;
-        row.appendChild(vesselIDCell);
-
         const vesselNameCell = document.createElement('td');
         vesselNameCell.textContent = travelFare.vessel_name;
         row.appendChild(vesselNameCell);
 
-        const travelFareNameCell = document.createElement('td');
-        travelFareNameCell.textContent = travelFare.travelFare_name;
-        row.appendChild(travelFareNameCell);
+        const routeNameCell = document.createElement('td');
+        routeNameCell.textContent = travelFare.route_name;
+        row.appendChild(routeNameCell);
 
-        const travelFareSecondTripCell = document.createElement('td');
-        travelFareSecondTripCell.textContent = travelFare.travelFare_first_trip;
-        row.appendChild(travelFareSecondTripCell);
+        const economyCell = document.createElement('td');
+        economyCell.textContent = travelFare.economy;
+        row.appendChild(economyCell);
 
-        const travelFareFirstTripCell = document.createElement('td');
-        travelFareFirstTripCell.textContent = travelFare.travelFare_second_trip;
-        row.appendChild(travelFareFirstTripCell);
+        const businessCell = document.createElement('td');
+        businessCell.textContent = travelFare.business;
+        row.appendChild(businessCell);
 
         // Create Action cell
         const actionCell = document.createElement('td');
@@ -328,7 +376,7 @@ export function travelFareFunctions() {
     }
 
     // Get the form element
-    const addTravelFareForm = document.querySelector('#addTravelFareModal form');
+    const addTravelFareForm = document.querySelector('#addFareModal form');
 
     if(addTravelFareForm){
         console.log(addTravelFareForm);
@@ -340,18 +388,18 @@ export function travelFareFunctions() {
     
           // Get the values from the form
           const vesselID = document.getElementById('vesselID').value;
-          const travelFareName = document.getElementById('travelFareName').value;
-          const travelFareFirstTrip = document.getElementById('travelFareFirstTrip').value;
-          const travelFareSecondTrip = document.getElementById('travelFareSecondTrip').value;
+          const routeID = document.getElementById('routeID').value;
+          const economy = document.getElementById('economy').value;
+          const business = document.getElementById('business').value;
     
           // Check if any of the fields are empty
-          if (!travelFareName || !vesselID || !travelFareFirstTrip || !travelFareSecondTrip) {
+          if (!routeID || !vesselID || !economy || !business) {
             alert('All fields must be filled out');
             return;
           }
     
           // Call the addTravelFare function with the entered data
-          await addTravelFare(vesselID, travelFareName, travelFareSecondTrip, travelFareFirstTrip);
+          await addTravelFare(vesselID, routeID, economy, business);
     
           // Clear the form
           addTravelFareForm.reset();
@@ -405,7 +453,7 @@ export function travelFareFunctions() {
     searchTravelFares(searchFor, searchVal);
 
     // Collection reference for travelFares
-    const travelFaresColRef = collection(db, 'TravelFare');
+    const travelFaresColRef = collection(db, 'Travel_Fare');
 
 
 }

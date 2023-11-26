@@ -51,25 +51,29 @@ export function bookingFunctions() {
         row.appendChild(cell2);
 
         const cell3 = document.createElement('td');
-        cell3.textContent = data.Destination;
+        cell2.textContent = data.vesselName;
         row.appendChild(cell3);
 
         const cell4 = document.createElement('td');
-        const date = data.dateIssued.toDate();
-        const formattedDate = moment(date).format('MMMM DD, YYYY HH:mm:ss');
-
-        cell4.textContent = formattedDate;
+        cell3.textContent = data.Destination;
         row.appendChild(cell4);
 
         const cell5 = document.createElement('td');
-        cell5.textContent = data.AccomType;
+        const date = data.dateIssued.toDate();
+        const formattedDate = moment(date).format('MMMM DD, YYYY HH:mm:ss');
+
+        cell5.textContent = formattedDate;
         row.appendChild(cell5);
 
         const cell6 = document.createElement('td');
-        cell6.textContent = data.TicketType;
+        cell6.textContent = data.AccomType;
         row.appendChild(cell6);
 
         const cell7 = document.createElement('td');
+        cell6.textContent = data.TicketType;
+        row.appendChild(cell7);
+
+        const cell8 = document.createElement('td');
 
         const viewIDButton = document.createElement('button');
         viewIDButton.textContent = 'View ID';
@@ -88,14 +92,14 @@ export function bookingFunctions() {
             approveButton.textContent = 'Approve';
             approveButton.classList.add('btn', 'btn-success');
             approveButton.addEventListener('click', function (event) {
-              approveBooking(data.booking_id)
+              approveBooking(data.bookID)
             });
   
             const disapproveButton = document.createElement('button');
             disapproveButton.textContent = 'Disapprove';
             disapproveButton.classList.add('btn', 'btn-danger');
             disapproveButton.addEventListener('click', function (event) {
-              disapproveBooking(data.booking_id)
+              disapproveBooking(data.bookID)
             });
   
             modalBody.appendChild(approveButton);
@@ -116,32 +120,32 @@ export function bookingFunctions() {
           }
         })
 
-        cell7.appendChild(viewIDButton);
-        row.appendChild(cell7);
-
-        const cell8 = document.createElement('td');
-        cell8.textContent = data.Gender;
+        cell8.appendChild(viewIDButton);
         row.appendChild(cell8);
 
         const cell9 = document.createElement('td');
-        cell9.textContent = data.Age;
+        cell9.textContent = data.Gender;
         row.appendChild(cell9);
 
         const cell10 = document.createElement('td');
-        cell10.textContent = data.DepartureTime;
+        cell10.textContent = data.Age;
         row.appendChild(cell10);
 
         const cell11 = document.createElement('td');
-        cell11.textContent = data.FarePrice;
+        cell11.textContent = data.DepartureTime;
         row.appendChild(cell11);
 
         const cell12 = document.createElement('td');
-        cell12.textContent = data.Discount;
+        cell12.textContent = data.FarePrice;
         row.appendChild(cell12);
 
         const cell13 = document.createElement('td');
-        cell13.textContent = data.status;
+        cell13.textContent = data.Discount;
         row.appendChild(cell13);
+
+        const cell14 = document.createElement('td');
+        cell14.textContent = data.status;
+        row.appendChild(cell14);
 
 
         tbody.appendChild(row);
@@ -151,13 +155,13 @@ export function bookingFunctions() {
     }
   }
 
-  async function approveBooking(booking_id){
-    console.log("approve: ", booking_id)
+  async function approveBooking(bookID){
+    console.log("approve: ", bookID)
     const dataToUpdate = {
       status: "Approved",
     };
 
-    const getRoute = query(bookingColRef, where('booking_id', '==', booking_id));
+    const getRoute = query(bookingColRef, where('bookID', '==', bookID));
 
     getDocs(getRoute)
       .then((querySnapshot) => {
@@ -179,12 +183,12 @@ export function bookingFunctions() {
 
   }
 
-  async function disapproveBooking(booking_id){
+  async function disapproveBooking(bookID){
     const dataToUpdate = {
       status: "Disapproved",
     };
 
-    const getRoute = query(bookingColRef, where('booking_id', '==', booking_id));
+    const getRoute = query(bookingColRef, where('bookID', '==', bookID));
 
     getDocs(getRoute)
       .then((querySnapshot) => {

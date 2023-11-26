@@ -153,8 +153,8 @@ export function routeFunctions() {
               route_name: routeName,
               route_location: routeLocation,
               route_destination: routeDestination,
-              fare_price : farePrice,
-              route_image: imageURL
+              fare_price : parseFloat(farePrice),
+              image: imageURL
             });
             console.log('Route added successfully!');
             $("#addRouteModal").modal("hide");
@@ -242,7 +242,7 @@ export function routeFunctions() {
           var img = document.createElement('img');
           img.style.width = '100%';
           img.style.height = '100%';
-          img.src=route.route_image;
+          img.src=route.image;
           modalBody.appendChild(img);
         })
 
@@ -352,7 +352,7 @@ export function routeFunctions() {
                     const routeData = doc.data();
                     const routeDocRef = doc.ref;
 
-                    const imageRef = ref(storage,routeData.route_image);
+                    const imageRef = ref(storage,routeData.image);
                     console.log("imageRef", imageRef);
                     // Delete the image
                     deleteObject(imageRef)
