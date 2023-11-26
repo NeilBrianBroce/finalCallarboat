@@ -67,8 +67,8 @@ export function routeFunctions() {
       // Create a canvas and draw the image onto it
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      canvas.width = 300; // Set the width of the canvas
-      canvas.height = 300; // Set the height of the canvas
+      canvas.width = 100; // Set the width of the canvas
+      canvas.height = 100; // Set the height of the canvas
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
      
       // Convert the canvas to a Blob
@@ -113,8 +113,8 @@ export function routeFunctions() {
      
         // Add checker if route_name already exists
         const queryWithSearch = query(routeColRef, where("route_name", '==', routeName), where("vessel_id", '==', vesselID));
-        const farePriceInput = document.getElementById('farePrice');
-        const farePrice = farePriceInput.value;
+        const routeNameInput = document.getElementById('routeName');
+        const routeName = routeNameInput.value;
      
         getDocs(queryWithSearch)
         .then(async (querySnapshot) => {

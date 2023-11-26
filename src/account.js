@@ -20,65 +20,300 @@ export function scannerFunctions() {
 
    //init services
    const db = getFirestore()
-   const scannersColRef = collection(db, 'Scanners');
+   const scannersColRef = collection(db, 'Scanner');
 
-   // Add new scanner
-   function addScanner(name, email, password) {
-      const scannerData = {
-          name: name,
-          email: email,
-          password: password
-      };
-      addDoc(scannersColRef, scannerData)
-          .then((docRef) => {
-              console.log("Document written with ID: ", docRef.id);
-          })
-          .catch((error) => {
-              console.error("Error adding document: ", error);
+  // Function to add a new account to Firestore
+  async function addAccount (userName, scannerEmail, scannerPassword) {
+    try {
+      // Add a new document to the "Vessels" collection with the entered data
+      const accountUniqueID = uuidv4();
+
+      // Add checker if vessel_name already exists
+      const queryWithSearch = query(scannersColRef, where("user_name", '==', userName));
+
+      getDocs(queryWithSearch)
+      .then((querySnapshot) => {
+        if (!querySnapshot.empty) {
+          throw new Error('Data already exists');
+        } else {
+          addDoc(scannersColRef, {
+            account_ID: accountUniqueID,
+            user_name: userName,
+            scanner_Email: scannerEmail,
+            scanner_Password: scannerPassword
           });
-   }
+          console.log('Account added successfully!');
+          $("#addAccountModal").modal("hide");
+        }
+      })
+    } catch (error) {
+      console.error('Error adding account!:', error);
+    }
+  }
 
-   // Edit scanner
-   function editScanner(id, name, email, password) {
-      const scannerRef = doc(db, 'Scanners', id);
-      const scannerData = {
-          name: name,
-          email: email,
-          password: password
-      };
-      setDoc(scannerRef, scannerData, { merge: true })
-          .then(() => {
-              console.log("Document successfully updated!");
-          })
-          .catch((error) => {
-              console.error("Error updating document: ", error);
-          });
-   }
+  
+  async function fetchAccounts() {
+    try {
+      const orderedQuery  = query(scannersColRef, orderBy('user_name', 'asc'));
+      const accounts = [];
 
-   // Delete scanner
-   function deleteScanner(id) {
-      const scannerRef = doc(db, 'Scanners', id);
-      deleteDoc(scannerRef)
-          .then(() => {
-              console.log("Document successfully deleted!");
-          })
-          .catch((error) => {
-              console.error("Error removing document: ", error);
-          });
-   }
+      getDocs(orderedQuery)
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          accounts.push(data); // Add the data to the array
+        });
 
-   // Display scanners
-   function displayScanners() {
-      const scannersQuery = query(scannersColRef);
-      getDocs(scannersQuery)
-          .then((querySnapshot) => {
-              querySnapshot.forEach((doc) => {
-                 console.log(`${doc.id} => ${doc.data()}`);
-                 // Here you can add code to add a new row to the HTML table
+        // Now, the "vessels" array contains the ordered documents
+        console.log(accounts);
+        displayAccountsInTable(accounts);
+      })
+      .catch((error) => {
+        console.error('Error getting documents: ', error);
+      });
+    } catch (error) {
+      console.error('Error fetching accounts:', error);
+    }
+  }
+
+  async function searchAccounts(searchFor, searchVal) {
+    try {
+      const queryWithSearch = query(scannersColRef, where(searchFor, '==', searchVal));
+      const searvhAccounts = [];
+
+      getDocs(queryWithSearch)
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          searvhAccounts.push(data); // Add the data to the array
+        });
+
+        // Now, the "vessels" array contains the ordered documents
+        console.log("searchAccount", searvhAccounts);
+      })
+      .catch((error) => {
+        console.error('Error getting documents: ', error);
+      });
+    } catch (error) {
+      console.error('Error fetching vessels:', error);
+    }
+  }
+
+   // Function to display the vessels in an HTML table
+   function displayAccountsInTable(accounts) {
+    // Get the tbody element
+    const tbody = document.getElementById('accountsTbody');
+
+    // Clear the tbody
+    tbody.innerHTML = '';
+
+    // Iterate over the vessels array and create table rows
+    accounts.forEach((account, index) => {
+      const row = document.createElement('tr');
+
+      // Create table cells for each data field
+      const userNameCell = document.createElement('td');
+      userNameCell.textContent = account.user_name;
+      row.appendChild(userNameCell);
+
+      const scannerEmailCell = document.createElement('td');
+      scannerEmailCell.textContent = account.scanner_Email;
+      row.appendChild(scannerEmailCell);
+
+      const scannerPasswordCell = document.createElement('td');
+      scannerPasswordCell.textContent = account.scanner_Password;
+      row.appendChild(scannerPasswordCell);
+
+      // Create Action cell
+      const actionCell = document.createElement('td');
+
+      // Create Edit button
+      const editButton = document.createElement('button');
+      editButton.textContent = 'Edit';
+      editButton.classList.add('btn', 'btn-success');
+      editButton.classList.add('editAccount');
+      editButton.setAttribute('id', "edit_" + account.account_ID);
+      actionCell.appendChild(editButton);
+
+      editButton.addEventListener('click', function (event) {
+        $("#editAccountModal").modal("show");
+        $("#editAccountName").val(account.user_name);
+        $("#editAccountEmail").val(account.scanner_Email);
+        $("#editAccountPassword").val(account.scanner_Password);
+        $("#editAccountID").val(account.account_ID);
+      });
+
+      // Create Delete button
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = 'Delete';
+      deleteButton.classList.add('btn', 'btn-danger');
+      deleteButton.classList.add('deleteAccount');
+      deleteButton.setAttribute('id', "delete_" + account.account_ID);
+      actionCell.appendChild(deleteButton);
+
+      deleteButton.addEventListener('click', function (event) {
+        deleteAccount(account.account_ID)
+      });
+
+      // Append the Action cell to the row
+      row.appendChild(actionCell);
+
+      // Append the row to the tbody
+      tbody.appendChild(row);
+    });
+  }
+
+  // Function to delete a vessel from Firestore
+  async function deleteAccount(accountID) {
+    try {
+        // Show a confirmation prompt to the user
+        const confirmDelete = confirm('Do you want to delete this entry?');
+
+        // If the user confirms the deletion
+        if (confirmDelete) {
+            // Delete the document with the corresponding ID from the "Vessels" collection
+            const getAccount = query(scannersColRef, where('account_ID', '==', accountID));
+9
+            getDocs(getAccount)
+              .then((querySnapshot) => {
+                if (!querySnapshot.empty) {
+                  // If a document matching the search criteria is found, delete it
+                  const doc = querySnapshot.docs[0]; // Get the first document (assuming it's unique)
+                  const accountDocRef = doc.ref;
+
+                  // Use deleteDoc to delete the document
+                  return deleteDoc(accountDocRef);
+                } else {
+                  console.log('Document not found');
+                }
+              })
+              .then(() => {
+                console.log('Document deleted successfully');
+              })
+              .catch((error) => {
+                console.error('Error:', error);
               });
-          })
-          .catch((error) => {
-              console.error("Error getting documents: ", error);
-          });
-   }
+            console.log('Account deleted successfully!');
+
+            // Fetch the updated list of accounts
+            await fetchAccounts();
+        }
+    } catch (error) {
+        console.error('Error deleting account:', error);
+    }
+  }
+
+  async function editAccount(accountID, userName, scannerEmail, scannerPassword) {
+    try {
+      // Check if any of the fields are empty
+      if (!userName || !scannerEmail || !scannerPassword) {
+        alert('All fields must be filled out');
+        return;
+      }
+
+      const dataToUpdate = {
+        user_name: userName,
+        scanner_Email: scannerEmail,
+        scanner_Password: scannerPassword
+      };
+
+      const getAccount = query(scannersColRef, where('account_ID', '==', accountID));
+
+      getDocs(getAccount)
+        .then((querySnapshot) => {
+          if (!querySnapshot.empty) {
+            // If a document matching the search criteria is found, update it
+            const doc = querySnapshot.docs[0]; // Get the first document (assuming it's unique)
+            const accountDocRef = doc.ref;
+            return setDoc(accountDocRef, dataToUpdate, { merge: true });
+            // // Use getDoc to retrieve the current document data
+            // return getDoc(vesselDocRef);
+          } else {
+            console.log('Document not found');
+          }
+        })
+        .then(() => {
+          console.log('Document updated successfully');
+          $("#editAccountModal").modal("hide");
+
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    } catch (error) {
+      console.error('Error updating account:', error);
+    }
+  }
+
+  // Get the form element
+  const addAccountForm = document.querySelector('#addAccountModal form');
+
+  if(addAccountForm){
+    console.log(addAccountForm);
+
+    // Add an event listener for the submit event
+    addAccountForm.addEventListener('submit', async (event) => {
+      // Prevent the form from being submitted normally
+      event.preventDefault();
+
+      // Get the values from the form
+      const userName = document.getElementById('userName').value;
+      const scannerEmail = document.getElementById('scannerEmail').value;
+      const scannerPassword = document.getElementById('scannerPassword').value;
+
+      // Check if any of the fields are empty
+      if (!userName || !scannerEmail || !scannerPassword) {
+        alert('All fields must be filled out');
+        return;
+      }
+
+      // Call the addAccount function with the entered data
+      await addAccount(userName, scannerEmail, scannerPassword);
+
+      // Clear the form
+      addAccountForm.reset();
+
+      // Fetch the updated list of vessels
+      await fetchAccounts();
+    });
+  }
+  
+
+  const editAccountForm = document.querySelector('#editAccountModal form');
+
+  if(editAccountForm){
+    console.log(editAccountForm);
+
+    // Add an event listener for the submit event
+    editAccountForm.addEventListener('submit', async (event) => {
+      // Prevent the form from being submitted normally
+      event.preventDefault();
+
+      // Get the values from the form
+      const accountID = document.getElementById('editAccountID').value;
+      const userName = document.getElementById('editAccountName').value;
+      const scannerEmail = document.getElementById('editScannerEmail').value;
+      const scannerPassword = document.getElementById('editScannerPassword').value;
+     
+
+      // Check if any of the fields are empty
+      if (!userName || !scannerEmail || !scannerPassword) {
+        alert('All fields must be filled out');
+        return;
+      }
+
+      // Call the addVessel function with the entered data
+      await editAccount(accountID, userName, scannerEmail, scannerPassword);
+
+      // Clear the form
+      editAccountForm.reset();
+
+      // Fetch the updated list of vessels
+      await fetchAccounts();
+    });
+  }
+  
+  // Fetch the list of vessels when the page loads
+  fetchAccounts();
+
 }

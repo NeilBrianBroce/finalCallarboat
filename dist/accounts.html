@@ -111,6 +111,7 @@
 
            <!-- Accounts Table -->
             <div class="container mt-5 position-relative">
+                <input type="hidden" id="moduleSelected" value="scanner">
                 <h2>Scanner Accounts</h2> <br><br>
 
                 <div class="card">
@@ -159,8 +160,41 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="password" class="col-form-label">Password:</label>
-                                    <input type="password" class="form-control" id="password">
+                                    <input type="password" class="form-control" id="scannerPassword">
                                   </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="editAccountModal" tabindex="-1" role="dialog" aria-labelledby="editAccountModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editAccountModalLabel">Edit Account</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editAccountForm">
+                                <div class="form-group">
+                                    <label for="userName" class="col-form-label">Account Name:</label>
+                                    <input type="text" class="form-control" id="editAccountName">
+                                    <input type="hidden" class="form-control" id="editAccountID">
+                                </div>
+                                <div class="form-group">
+                                    <label for="scannerEmail" class="col-form-label">Email:</label>
+                                    <input type="email" class="form-control" id="editScannerEmail">
+                                </div>
+                                <div class="form-group">
+                                    <label for="scannerPassword" class="col-form-label">Password:</label>
+                                    <input type="password" class="form-control" id="editScannerPassword">
+                                </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </div>

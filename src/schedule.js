@@ -156,8 +156,12 @@ export function scheduleFunctions() {
         const row = document.createElement('tr');
 
         // Create table cells for each data field
+        const vesselIDCell = document.createElement('td');
+        vesselIDCell.textContent = schedule.vessel_id;
+        row.appendChild(vesselIDCell);
+
         const vesselNameCell = document.createElement('td');
-        vesselNameCell.textContent = schedule.vessel_id;
+        vesselNameCell.textContent = schedule.vessel_name;
         row.appendChild(vesselNameCell);
 
         const scheduleNameCell = document.createElement('td');
