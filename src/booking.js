@@ -1,6 +1,6 @@
 import {initializeApp} from '../node_modules/firebase/app'
-import { getFirestore, collection, getDocs, addDoc, getDoc, query, where, orderBy, doc, deleteDoc, setDoc } from '../node_modules/firebase/firestore';
-import { getStorage, ref, getDownloadURL } from '../node_modules/firebase/storage';
+import { getFirestore, collection, getDocs, addDoc, getDoc, query, where, orderBy, doc, deleteDoc, setDoc,updateDoc } from '../node_modules/firebase/firestore';
+import { getStorage, ref, getDownloadURL, uploadBytes } from '../node_modules/firebase/storage';
 
 export function bookingFunctions() {
     const { v4: uuidv4 } = require('uuid');
@@ -185,33 +185,39 @@ export function bookingFunctions() {
   
         // Convert the data URL to a Blob
         const blob = await fetch(qrCodeImage).then(response => response.blob());
+        console.log("blob", blob)
   
         // Create a reference to the storage location 
-        const storageRef = ref(storage, `QRcode/${bookID}.png`);
+        const storageRef = ref(storage, `QrCode/${bookID}.png`);
   
         // Upload the QR code image to Firebase Storage
         await uploadBytes(storageRef, blob);
 
   
         // Get the download URL of the uploaded image
-        const downloadURL = await qrCodeRef.getDownloadURL();
+        const downloadURL = await getDownloadURL(storageRef);
+
+      
+        if(downloadURL){
+          // Update Firestore document with the QR code URL
+          await updateDoc(bookingDocRef, { qrCodeURL: downloadURL });
+    
+          // Save message to Firestore with a unique notificationID
+          const notificationID = uuidv4();
+          const notificationData = {
+            notificationID,
+            message: `Booking with ID ${bookID} has been approved.`,
+            timestamp: new Date(),
+          };
+    
+          await addDoc(notificationsColRef, notificationData);
+    
+          console.log('Document updated successfully');
+          console.log('Notification saved successfully');
+          $("#viewIDModal").modal("hide");
+        }
   
-        // Update Firestore document with the QR code URL
-        await updateDoc(bookingDocRef, { qrCodeURL: downloadURL });
-  
-        // Save message to Firestore with a unique notificationID
-        const notificationID = uuidv4();
-        const notificationData = {
-          notificationID,
-          message: `Booking with ID ${bookID} has been approved.`,
-          timestamp: new Date(),
-        };
-  
-        await addDoc(notificationsColRef, notificationData);
-  
-        console.log('Document updated successfully');
-        console.log('Notification saved successfully');
-        $("#viewIDModal").modal("hide");
+      
       } else {
         console.log('Document not found');
       }
