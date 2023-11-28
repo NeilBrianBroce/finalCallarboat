@@ -1,5 +1,7 @@
 import {initializeApp} from '../node_modules/firebase/app'
 import { getFirestore, collection, getDocs, addDoc, getDoc, query, where, orderBy, doc, deleteDoc, setDoc } from '../node_modules/firebase/firestore';
+import { getAuth, createUserWithEmailAndPassword } from '../node_modules/@firebase/auth';
+import '../node_modules/@firebase/auth';
 
 export function scannerFunctions() {
    const { v4: uuidv4 } = require('uuid');
@@ -19,37 +21,33 @@ export function scannerFunctions() {
    initializeApp(firebaseConfig)
 
    //init services
+   const app = initializeApp(firebaseConfig);
    const db = getFirestore()
-   const scannersColRef = collection(db, 'Scanner');
+   const scannersColRef = collection(db, 'Scanners');
+   const auth = getAuth();
 
   // Function to add a new account to Firestore
-  async function addAccount (userName, scannerEmail, scannerPassword) {
+  async function addAccount(userName, scannerEmail, scannerPassword) {
     try {
-      // Add a new document to the "Vessels" collection with the entered data
-      const accountUniqueID = uuidv4();
+      const userCredential = await createUserWithEmailAndPassword(auth, scannerEmail, scannerPassword);
+      const user = userCredential.user;
 
-      // Add checker if vessel_name already exists
-      const queryWithSearch = query(scannersColRef, where("user_name", '==', userName));
+      // Add additional information to Firestore
+      const accountUniqueID = user.uid;
+      await addDoc(scannersColRef, {
+        account_ID: accountUniqueID,
+        user_name: userName,
+        scanner_Email: scannerEmail,
+        // Additional fields if needed
+      });
 
-      getDocs(queryWithSearch)
-      .then((querySnapshot) => {
-        if (!querySnapshot.empty) {
-          throw new Error('Data already exists');
-        } else {
-          addDoc(scannersColRef, {
-            account_ID: accountUniqueID,
-            user_name: userName,
-            scanner_Email: scannerEmail,
-            scanner_Password: scannerPassword
-          });
-          console.log('Account added successfully!');
-          $("#addAccountModal").modal("hide");
-        }
-      })
+      console.log('Account added successfully!');
+      $("#addAccountModal").modal("hide");
     } catch (error) {
       console.error('Error adding account!:', error);
     }
   }
+
 
   
   async function fetchAccounts() {
@@ -76,29 +74,6 @@ export function scannerFunctions() {
     }
   }
 
-  async function searchAccounts(searchFor, searchVal) {
-    try {
-      const queryWithSearch = query(scannersColRef, where(searchFor, '==', searchVal));
-      const searvhAccounts = [];
-
-      getDocs(queryWithSearch)
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          searvhAccounts.push(data); // Add the data to the array
-        });
-
-        // Now, the "vessels" array contains the ordered documents
-        console.log("searchAccount", searvhAccounts);
-      })
-      .catch((error) => {
-        console.error('Error getting documents: ', error);
-      });
-    } catch (error) {
-      console.error('Error fetching vessels:', error);
-    }
-  }
-
    // Function to display the vessels in an HTML table
    function displayAccountsInTable(accounts) {
     // Get the tbody element
@@ -107,7 +82,7 @@ export function scannerFunctions() {
     // Clear the tbody
     tbody.innerHTML = '';
 
-    // Iterate over the vessels array and create table rows
+    // Iterate over the accounts array and create table rows
     accounts.forEach((account, index) => {
       const row = document.createElement('tr');
 
@@ -120,10 +95,19 @@ export function scannerFunctions() {
       scannerEmailCell.textContent = account.scanner_Email;
       row.appendChild(scannerEmailCell);
 
+      // Create Password cell
       const scannerPasswordCell = document.createElement('td');
-      scannerPasswordCell.textContent = account.scanner_Password;
+      scannerPasswordCell.textContent = '********'; // Display asterisks or any placeholder
       row.appendChild(scannerPasswordCell);
 
+      // Create hidden input for the actual password
+      const hiddenPasswordInput = document.createElement('input');
+      hiddenPasswordInput.type = 'hidden';
+      hiddenPasswordInput.value = account.scanner_Password;
+      hiddenPasswordInput.id = 'hiddenPassword_' + account.account_ID;
+      row.appendChild(hiddenPasswordInput);
+
+      
       // Create Action cell
       const actionCell = document.createElement('td');
 
@@ -248,36 +232,26 @@ export function scannerFunctions() {
   // Get the form element
   const addAccountForm = document.querySelector('#addAccountModal form');
 
-  if(addAccountForm){
+  if (addAccountForm) {
     console.log(addAccountForm);
 
-    // Add an event listener for the submit event
     addAccountForm.addEventListener('submit', async (event) => {
-      // Prevent the form from being submitted normally
       event.preventDefault();
 
-      // Get the values from the form
       const userName = document.getElementById('userName').value;
       const scannerEmail = document.getElementById('scannerEmail').value;
       const scannerPassword = document.getElementById('scannerPassword').value;
 
-      // Check if any of the fields are empty
       if (!userName || !scannerEmail || !scannerPassword) {
         alert('All fields must be filled out');
         return;
       }
 
-      // Call the addAccount function with the entered data
       await addAccount(userName, scannerEmail, scannerPassword);
-
-      // Clear the form
       addAccountForm.reset();
-
-      // Fetch the updated list of vessels
       await fetchAccounts();
     });
   }
-  
 
   const editAccountForm = document.querySelector('#editAccountModal form');
 

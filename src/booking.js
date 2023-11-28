@@ -133,20 +133,12 @@ export function bookingFunctions() {
         row.appendChild(cell10);
 
         const cell11 = document.createElement('td');
-        cell11.textContent = data.DepartureTime;
+        cell11.textContent = data.Discount;
         row.appendChild(cell11);
 
         const cell12 = document.createElement('td');
-        cell12.textContent = data.FarePrice;
+        cell12.textContent = data.status;
         row.appendChild(cell12);
-
-        const cell13 = document.createElement('td');
-        cell13.textContent = data.Discount;
-        row.appendChild(cell13);
-
-        const cell14 = document.createElement('td');
-        cell14.textContent = data.status;
-        row.appendChild(cell14);
 
 
         tbody.appendChild(row);
@@ -174,50 +166,46 @@ export function bookingFunctions() {
         // Update booking status
         await setDoc(bookingDocRef, dataToUpdate, { merge: true });
   
-        // Get passenger name and booking date
-        const { passengerName, bookingDate } = doc.data();
+        // Get passenger name, booking date, and userID
+        const { Name, dateIssued, user } = doc.data();
   
         // Generate QR code data
-        const qrCodeData = `Passenger: ${passengerName}, Date: ${bookingDate}`;
+        const qrCodeData = `Passenger: ${Name}, Date: ${dateIssued}, Status: ${dataToUpdate.status}`;
   
         // Generate QR code image
         const qrCodeImage = await QRCode.toDataURL(qrCodeData);
   
         // Convert the data URL to a Blob
         const blob = await fetch(qrCodeImage).then(response => response.blob());
-        console.log("blob", blob)
   
         // Create a reference to the storage location 
         const storageRef = ref(storage, `QrCode/${bookID}.png`);
   
         // Upload the QR code image to Firebase Storage
         await uploadBytes(storageRef, blob);
-
   
         // Get the download URL of the uploaded image
         const downloadURL = await getDownloadURL(storageRef);
-
-      
-        if(downloadURL){
+  
+        if (downloadURL) {
           // Update Firestore document with the QR code URL
           await updateDoc(bookingDocRef, { qrCodeURL: downloadURL });
-    
+  
           // Save message to Firestore with a unique notificationID
           const notificationID = uuidv4();
           const notificationData = {
             notificationID,
             message: `Booking with ID ${bookID} has been approved.`,
             timestamp: new Date(),
+            userID: user, // Add userID to the notification data
           };
-    
+  
           await addDoc(notificationsColRef, notificationData);
-    
+  
           console.log('Document updated successfully');
           console.log('Notification saved successfully');
           $("#viewIDModal").modal("hide");
         }
-  
-      
       } else {
         console.log('Document not found');
       }
@@ -226,7 +214,6 @@ export function bookingFunctions() {
     }
   }
   
-  
   async function disapproveBooking(bookID) {
     const dataToUpdate = {
       status: 'Cancelled',
@@ -234,17 +221,19 @@ export function bookingFunctions() {
   
     const getRoute = query(bookingColRef, where('bookID', '==', bookID));
   
-    getDocs(getRoute)
-      .then((querySnapshot) => {
-        if (!querySnapshot.empty) {
-          const doc = querySnapshot.docs[0];
-          const bookingDocRef = doc.ref;
-          return setDoc(bookingDocRef, dataToUpdate, { merge: true });
-        } else {
-          console.log('Document not found');
-        }
-      })
-      .then(() => {
+    try {
+      const querySnapshot = await getDocs(getRoute);
+  
+      if (!querySnapshot.empty) {
+        const doc = querySnapshot.docs[0];
+        const bookingDocRef = doc.ref;
+  
+        // Get passenger userID
+        const { user } = doc.data();
+  
+        // Update booking status
+        await setDoc(bookingDocRef, dataToUpdate, { merge: true });
+  
         console.log('Document updated successfully');
   
         // Save message to Firestore with a unique notificationID
@@ -253,18 +242,21 @@ export function bookingFunctions() {
           notificationID,
           message: `Booking with ID ${bookID} has been cancelled.`,
           timestamp: new Date(),
+          userID: user, // Add userID to the notification data
         };
   
-        return addDoc(notificationsColRef, notificationData);
-      })
-      .then(() => {
+        await addDoc(notificationsColRef, notificationData);
+  
         console.log('Notification saved successfully');
         $("#viewIDModal").modal("hide");
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+      } else {
+        console.log('Document not found');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   }
+  
 
   populateBookings();
 }

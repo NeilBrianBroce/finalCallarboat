@@ -16,9 +16,10 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "firebase": "^10.5.2",
+    "firebase": "^10.7.0",
     "moment": "^2.29.4",
     "qrcode": "^1.5.3",
+    "save": "^2.9.0",
     "uuid": "^8.3.2"
   }
 }
