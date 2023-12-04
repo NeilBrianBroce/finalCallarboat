@@ -37,7 +37,7 @@ export function bookingFunctions() {
     try {
       const orderedQuery = query(bookingColRef, orderBy('Date', 'desc'));
       const querySnapshot = await getDocs(orderedQuery);
-      querySnapshot.forEach((doc) => {
+      querySnapshot.forEach(async (doc) => {
         const data = doc.data();
         console.log(data);
         const row = document.createElement('tr');
@@ -137,8 +137,12 @@ export function bookingFunctions() {
         row.appendChild(cell11);
 
         const cell12 = document.createElement('td');
-        cell12.textContent = data.status;
+        cell12.textContent = data.paymentId; 
         row.appendChild(cell12);
+
+        const cell13 = document.createElement('td');
+        cell13.textContent = data.status;
+        row.appendChild(cell13);
 
 
         tbody.appendChild(row);
@@ -178,7 +182,7 @@ export function bookingFunctions() {
         // Convert the data URL to a Blob
         const blob = await fetch(qrCodeImage).then(response => response.blob());
   
-        // Create a reference to the storage location 
+        // Create a reference to the storage location
         const storageRef = ref(storage, `QrCode/${bookID}.png`);
   
         // Upload the QR code image to Firebase Storage
@@ -193,11 +197,14 @@ export function bookingFunctions() {
   
           // Save message to Firestore with a unique notificationID
           const notificationID = uuidv4();
+          const approvalDate = new Date();
           const notificationData = {
             notificationID,
-            message: `Booking with ID ${bookID} has been approved.`,
-            timestamp: new Date(),
-            userID: user, // Add userID to the notification data
+            message: `Booking for Passenger ${Name} has been approved on ${approvalDate}.`,
+            timestamp: approvalDate,
+            userID: user,
+            headerApprove: 'Ticket Approval Notification',
+            approvalDate: approvalDate,
           };
   
           await addDoc(notificationsColRef, notificationData);
@@ -216,7 +223,7 @@ export function bookingFunctions() {
   
   async function disapproveBooking(bookID) {
     const dataToUpdate = {
-      status: 'Cancelled',
+      status: 'Cancelled by Agency',
     };
   
     const getRoute = query(bookingColRef, where('bookID', '==', bookID));
@@ -228,8 +235,8 @@ export function bookingFunctions() {
         const doc = querySnapshot.docs[0];
         const bookingDocRef = doc.ref;
   
-        // Get passenger userID
-        const { user } = doc.data();
+        // Get passenger name and userID
+        const { Name, user } = doc.data();
   
         // Update booking status
         await setDoc(bookingDocRef, dataToUpdate, { merge: true });
@@ -238,11 +245,14 @@ export function bookingFunctions() {
   
         // Save message to Firestore with a unique notificationID
         const notificationID = uuidv4();
+        const cancellationDate = new Date();
         const notificationData = {
           notificationID,
-          message: `Booking with ID ${bookID} has been cancelled.`,
-          timestamp: new Date(),
-          userID: user, // Add userID to the notification data
+          message: `Booking for Passenger ${Name} has been cancelled on ${cancellationDate}.`,
+          timestamp: cancellationDate,
+          userID: user,
+          headerApprove: 'Ticket Cancelled Notification',
+          cancellationDate: cancellationDate,
         };
   
         await addDoc(notificationsColRef, notificationData);
@@ -257,6 +267,5 @@ export function bookingFunctions() {
     }
   }
   
-
   populateBookings();
 }
