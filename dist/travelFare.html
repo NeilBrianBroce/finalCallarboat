@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agency - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div id="sidebar" class="sidebar close">
+            <div class="logo-details clickable">
+                <!-- <i class='bx bxs-ship'></i> -->
+                <!-- <span class="logo_name">CallArBoat</span> -->
+                <i class='bx bx-menu'></i>
+            </div>
+            <ul class="nav-links">
+                <li>
+                    <a href="index.html" id="dashboard-link">
+                        <i class='bx bx-grid-alt'></i>
+                        <span class="link_name">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="bookings.html">
+                        <i class='bx bx-book'></i>
+                        <span class="link_name">Bookings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="vessels.html">
+                        <i class='bx bxs-ship'></i>
+                        <span class="link_name">Vessels</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="route.html">
+                        <i class='bx bx-map-alt'></i>
+                        <span class="link_name">Route</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="schedule.html">
+                        <i class='bx bx-calendar-alt'></i>
+                        <span class="link_name">Schedule</span>
+                    </a>
+                </li>
+
+                <li class="active">
+                    <a href="travelFare.html">
+                        <i class='bx bx-coin-stack'></i>
+                        <span class="link_name">Travel Fare</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="subscription.html">
+                        <i class='bx bx-credit-card'></i>
+                        <span class="link_name">Subscription</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="accounts.html">
+                        <i class="bx bx-archive" aria-hidden="true"></i>
+                        <span class="link_name">Accounts</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <div class="profile-details">
+
+                        <!-- <div class="name-job">
+                        <i class='bx bx-log-in'></i>
+                    </div>
+                    <i class='bx bx-log-out'></i> -->
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="main">
+            <nav class="navbar navbar-expand bg-body-tertiary sidebar-collapsed m-0 p-0">
+                <div class="container-fluid">
+                    <div class="sidebar-logo">
+                        <a href="#">
+                            <i class='bx bxs-ship'></i>
+                            CallArBoat</a>
+                    </div>
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a href="#" data-bs-toggle="dropdown" class="nav-icon">
+                                <img src="../assets/img/profile.jpg" alt="profile" class="avatar img-fluid ">
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a href="#" class="dropdown-item">Profile</a>
+                                <a href="#" class="dropdown-item">Settings</a>
+                                <a href="#" class="dropdown-item">Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+           <!-- Travel Fares Table -->
+           <div class="container mt-5 position-relative">
+            <h2>Travel Fare</h2> <br><br>
+        
+            <div class="card">
+                <div class="card-body">
+                    <button id="addFare" class="btn btn-primary mb-3 position-absolute" style="top: -40px; right: 20px;">Add +</button>
+                <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                    <table id="fareTable" class="table table-bordered table-condensed table-striped">
+                        <thead>
+                        <tr>
+                            <th>Vessel Name</th>
+                            <th>Route</th>
+                            <th>Economy</th>
+                            <th>Business</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody id="fareTbody">
+                        <!-- Rows will be added dynamically here -->
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <!-- Add Travel Fare Modal -->
+            <div class="modal fade" id="addFareModal" tabindex="-1" role="dialog" aria-labelledby="addFareModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addFareModalLabel">Add Travel Fare</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addFareForm">
+                                <div class="form-group">
+                                    <label for="vesselName" class="col-form-label">Vessel Name:</label>
+                                    <input type="text" class="form-control" id="fareName">
+                                </div>
+                                <div class="form-group">
+                                    <label for="route" class="col-form-label">Route:</label>
+                                    <input type="text" class="form-control" id="route">
+                                </div>
+                                <div class="form-group">
+                                    <label for="economy" class="col-form-label">Economy:</label>
+                                    <input type="text" class="form-control" id="economy">
+                                </div>
+                                <div class="form-group">
+                                    <label for="business" class="col-form-label">Business:</label>
+                                    <input type="text" class="form-control" id="business">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+            <!-- Discount Fares Table -->
+           <div class="container mt-5 position-relative">
+            <h2>Discount Fare</h2> <br><br>
+        
+            <div class="card">
+                <div class="card-body">
+                    <button id="addDiscFare" class="btn btn-primary mb-3 position-absolute" style="top: -40px; right: 20px;">Add +</button>
+                <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                    <table id="discFareTable" class="table table-bordered table-condensed table-striped">
+                        <thead>
+                        <tr>
+                            <th>Discount Type</th>
+                            <th>Age</th>
+                            <th>Discount Percent</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody id="discFareTbody">
+                        <!-- Rows will be added dynamically here -->
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            
+            <!-- Add Discount Fare Modal -->
+            <div class="modal fade" id="addDiscFareModal" tabindex="-1" role="dialog" aria-labelledby="addDiscFareModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addDiscFareModalLabel">Add Discount Fare</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addDiscFareForm">
+                                <div class="form-group">
+                                    <label for="discountType" class="col-form-label">Discount Type:</label>
+                                    <select class="form-control" id="discountType">
+                                        <option value="Senior">Senior</option>
+                                        <option value="Student">Student</option>
+                                        <option value="PWD">PWD</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="age" class="col-form-label">Age:</label>
+                                    <input type="text" class="form-control" id="age">
+                                </div>
+                                <div class="form-group">
+                                    <label for="discPercent" class="col-form-label">Discount Percent:</label>
+                                    <input type="text" class="form-control" id="discPercent">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    <script>
+        // Add click event listener to logo-details
+        $('.logo-details').click(function() {
+            $('#sidebar').toggleClass('close');
+        });
+
+        // Wait for the document to be ready
+        $(document).ready(function() {
+                    // Add a click event listener to the addFare button
+                    $("#addFare").click(function() {
+                        // Open the addFareModal using jQuery
+                        $("#addFareModal").modal("show");
+                    });
+
+                    // Add a click event listener to the addDiscFare button
+                    $("#addDiscFare").click(function() {
+                        // Open the addDiscFareModal using jQuery
+                        $("#addDiscFareModal").modal("show");
+                    });
+                });
+    </script>
+    <script src="bundle.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

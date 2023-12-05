@@ -1,0 +1,654 @@
+/* CSS FOR ADMIN */
+
+*,
+::after,
+::before {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Open Sans", sans-serif;
+    /* color: #585a61; */
+    font-size: 0.875rem;
+    opacity: 1;
+    overflow-y: scroll;
+    margin: 0;
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+li {
+    list-style: none;
+}
+
+/* ul {
+    margin: 0;
+    padding: 0;
+} */
+
+/* Design for admin dashboard skeleton */
+.wrapper {
+    align-items: stretch;
+    display: flex;
+    width: 100%;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-width: 0;
+    overflow: hidden;
+    transition: all 0.35s ease-in-out;
+    width: 100%;
+    background: var(--bs-secondary-bg);
+    padding-left: 260px;
+    /* padding-top: 60px; */
+}
+
+/* Navbar Design */
+.main .navbar {
+    height: 60px;
+    background-color: #F5F6FA;
+    margin-left: 78px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+.navbar .sidebar-logo a {
+    color: #8C91A2;
+    font-size: 25px;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar .sidebar-logo a i {
+    color: #8C91A2;
+    font-size: 32px;
+    padding-right: 5px;
+}
+
+.avatar {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+}
+
+.navbar-expand .navbar-nav {
+    margin-left: auto;
+}
+
+/* Sidebar Design */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 260px;
+    background: #F5F6FA;
+    z-index: 100;
+    transition: all 0.5s ease;
+    box-shadow: 5px 0px 5px rgba(0, 0, 0, 0.082);
+}
+
+.sidebar.close {
+    width: 78px;
+}
+
+.sidebar.close .nav-links li {
+    margin: 0;
+    /* Set margin to 0 when the sidebar is collapsed */
+}
+
+/* 6 */
+.sidebar .nav-links li.active i {
+    min-width: 55px;
+}
+
+.sidebar .logo-details .logo_name {
+    font-size: 22px;
+    color: #000;
+    font-weight: 600;
+    transition: 0.3s ease;
+    transition-delay: 0.1s;
+}
+
+.sidebar .logo-details {
+    height: 60px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    /* Align items horizontally */
+    transition: justify-content 0.3s ease;
+    /* Add a transition effect */
+}
+
+.sidebar .logo-details i {
+    font-size: 30px;
+    color: #8C91A2;
+    height: 50px;
+    min-width: 78px;
+    text-align: center;
+    line-height: 50px;
+}
+
+.sidebar.close .logo-details {
+    justify-content: flex-end;
+    /* Move the icon to the right when the sidebar is collapsed */
+}
+
+.sidebar.close .logo-details i.bx-menu,
+.sidebar .logo-details i.bx-menu {
+    cursor: pointer;
+}
+
+
+.sidebar .nav-links {
+    height: 100%;
+    padding: 30px 0 150px 0;
+    overflow: auto;
+}
+
+.sidebar.close .nav-links {
+    overflow: visible;
+}
+
+.sidebar .nav-links::-webkit-scrollbar {
+    display: none;
+}
+
+.sidebar .nav-links li {
+    position: relative;
+    list-style: none;
+    transition: all 0.4s ease;
+}
+
+/* 4 */
+.sidebar .nav-links li:hover {
+    background: #87CEEB;
+    width: 90%;
+    margin-left: 15px;
+    border-radius: 10px;
+}
+
+.sidebar .nav-links li.active {
+    background: #3A78F2;
+    /* color: #fff; */
+    margin: 0 10px 0 15px;
+    border-radius: 10px;
+}
+
+/* 5 */
+.sidebar .nav-links li.active a,
+.sidebar .nav-links li.active a i,
+.sidebar .nav-links li.active a .link_name {
+    color: #fff;
+}
+
+/* 7 */
+.sidebar.close .nav-links li a i {
+    transition: none;
+}
+
+.sidebar .nav-links li .iocn-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sidebar.close .nav-links li .iocn-link {
+    display: block
+}
+
+.sidebar .nav-links li i {
+    height: 50px;
+    min-width: 78px;
+    text-align: center;
+    line-height: 50px;
+    color: #8C91A2;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sidebar .nav-links li.showMenu i.arrow {
+    transform: rotate(-180deg);
+}
+
+.sidebar.close .nav-links i.arrow {
+    display: none;
+}
+
+.sidebar .nav-links li a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+/* Need adjustment for iocn */
+.nav-links li a:hover i,
+.nav-links li a:hover .iocn-link,
+.nav-links li a:hover .link_name {
+    color: #fff;
+}
+
+.sidebar .nav-links li a .link_name {
+    font-size: 18px;
+    font-weight: 400;
+    color: #8C91A2;
+    transition: all 0.4s ease;
+}
+
+.sidebar.close .nav-links li a .link_name {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.sidebar .nav-links li .sub-menu {
+    padding: 6px 6px 14px 80px;
+    margin-top: -10px;
+    background: #1d1b31;
+    display: none;
+}
+
+.sidebar .nav-links li.showMenu .sub-menu {
+    display: block;
+}
+
+.sidebar .nav-links li .sub-menu a {
+    color: #fff;
+    font-size: 15px;
+    padding: 5px 0;
+    white-space: nowrap;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.sidebar .nav-links li .sub-menu a:hover {
+    color: #fff;
+    opacity: 1;
+}
+
+.sidebar.close .nav-links li .sub-menu {
+    position: absolute;
+    left: 100%;
+    top: -10px;
+    margin-top: 0;
+    padding: 10px 20px;
+    border-radius: 0 6px 6px 0;
+    opacity: 0;
+    display: block;
+    pointer-events: none;
+    transition: 0s;
+}
+
+.sidebar.close .nav-links li:hover .sub-menu {
+    top: 0;
+    opacity: 1;
+    color: #fff;
+    pointer-events: auto;
+    transition: all 0.4s ease;
+}
+
+.sidebar .nav-links li .sub-menu .link_name {
+    display: none;
+}
+
+/* 1 */
+.sidebar .nav-links li a i:hover {
+    color: #fff;
+}
+
+.sidebar.close .nav-links li .sub-menu .link_name {
+    font-size: 18px;
+    opacity: 1;
+    display: block;
+}
+
+/* 2 */
+.sidebar.close .nav-links li a i:hover {
+    color: #fff;
+}
+
+.sidebar .nav-links li .sub-menu.blank {
+    opacity: 1;
+    pointer-events: auto;
+    padding: 3px 20px 6px 16px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.sidebar .nav-links li:hover .sub-menu.blank {
+    top: 50%;
+    color: #fff;
+    transform: translateY(-50%);
+}
+
+.sidebar .nav-links li:hover .link_name {
+    color: #fff;
+}
+
+.sidebar .profile-details {
+    position: fixed;
+    bottom: 0;
+    width: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #1d1b31;
+    padding: 12px 0;
+    transition: all 0.5s ease;
+}
+
+.sidebar.close .profile-details {
+    background: none;
+}
+
+.sidebar.close .profile-details {
+    width: 78px;
+}
+
+.sidebar .profile-details .profile-content {
+    display: flex;
+    align-items: center;
+}
+
+.sidebar .profile-details img {
+    height: 52px;
+    width: 52px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin: 0 14px 0 12px;
+    background: #1d1b31;
+    transition: all 0.5s ease;
+}
+
+.sidebar.close .profile-details img {
+    padding: 10px;
+}
+
+.sidebar .profile-details .profile_name,
+.sidebar .profile-details .job {
+    color: #8C91A2;
+    font-size: 18px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.sidebar.close .profile-details i,
+.sidebar.close .profile-details .profile_name,
+.sidebar.close .profile-details .job {
+    display: none;
+}
+
+.sidebar .profile-details .job {
+    font-size: 12px;
+}
+
+#sidebar.close+.main {
+    padding-left: 78px;
+}
+
+.navbar {
+    transition: margin-left 0.35s ease-in-out;
+}
+
+/* CSS for the navbar when sidebar is not collapsed */
+.navbar.sidebar-not-collapsed {
+    margin-left: 260px;
+}
+
+/* CSS for the navbar when sidebar is collapsed */
+.navbar.sidebar-collapsed {
+    margin-left: 78px;
+}
+
+/* MAIN DESIGN */
+
+section {
+    margin-top: 62px;
+}
+
+/* DASHBOARD TAB */
+.dashboard {
+    background-color: #F4F4F4;
+}
+
+.dash-card {
+    background-image: url('/assets/img/bg-card.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    border-radius: 10px;
+    padding: 40px;
+}
+
+.dash-card .row .col-6 .left-card {
+    width: 55%;
+}
+
+.dash-card-text .card-txt p {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 0;
+}
+
+.dash-card-text .text-right p {
+    font-size: 80px;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 0;
+}
+
+.dash-card-text .text-right .bx {
+    font-size: 100px;
+    color: #333333;
+}
+
+.dashboard .row .col-4 img.img-fluid {
+    /* padding-left: 20px; */
+    padding: 20px;
+}
+
+/* Dashbaord Table */
+/* ******************* */
+
+.right-table .dropdown a.dropdown-toggle {
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.right-table .dropdown a.dropdown-toggle:hover {
+    /* box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); */
+    color: #000;
+    background-color: #d2ddf5;
+}
+
+.right-table h5 {
+    font-weight: bold;
+    color: #000;
+    font-size: 24px;
+    padding: 10px 0px;
+    margin-bottom: 0;
+}
+
+.right-table {
+    border-radius: 5px;
+    background-color: #f1f1f1;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.right-table .sub-table {
+    height: 390;
+    max-height: 400px;
+    /* overflow-y: auto; */
+    border-top: 5px solid #4A79E5;
+}
+
+.sub-table .table .sticky-head {
+    position: sticky;
+    top: 0;
+    background-color: #9698b4;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    /* Background color for the sticky header */
+    z-index: 1;
+    /* Ensure it's above the content when scrolling */
+}
+
+/* .right-table .row {
+    max-height: 450px;
+    overflow: auto;
+} */
+.search-bar {
+    display: flex;
+    align-items: center;
+  }
+.sub-table .align-middle .status {
+    background-color: #C5FFC5;
+    color: #5CB85C;
+    text-align: center;
+    border-radius: 5px;
+    margin-bottom: 0;
+    font-size: 14px;
+}
+
+
+
+.dash-table .col-8 .col-md-12 {
+    margin-left: 10px;
+    margin-right: 20px;
+    outline: 1px red solid;
+}
+
+.dashboard .row .box-card {
+    background-color: #eeeeee;
+    margin: 5px 30px 30px 30px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.dashboard .row .box-card .row {
+    margin: 5px;
+}
+
+.dashboard .row .col-4 {
+    padding: 0px;
+}
+
+.page-title {
+    padding-top: 20px;
+    /* font-weight: bold; */
+    /* font-size: 20px; */
+    padding-left: 20px;
+}
+
+.page-title h4 {
+    font-weight: 550;
+    font-size: 20px;
+}
+
+/* Chart */
+#chart-container {
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+}
+
+.dash-chart {
+    background-color: #fffdfd;
+    border-radius: 10px;
+    margin: 5px 20px 20px 20px;
+    padding: 25px;
+}
+
+.dash-chart .col-8 {
+    border: 0.030rem #000 solid;
+    background-color: #f1f1f1;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+.dash-chart .dropdown {
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.dash-chart .dropdown a:hover {
+    /* box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); */
+    background-color: #3A78F2;
+    color: white;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+}
+
+.close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-body {
+    margin-top: 20px;
+}
+
+.modal-body .form-group {
+    margin-bottom: 20px;
+}
+
+.modal-body .form-control {
+    width: 100%;
+}
+
+.modal-body .btn-primary {
+    width: auto;
+}
+
+
+/* ======== Accounts Section ======= */
+.accounts {
+    display: none;
+}

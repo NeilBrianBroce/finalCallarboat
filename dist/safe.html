@@ -1,0 +1,752 @@
+<!-- Alert Message after Successfully Subscribe -->
+<div class="alert-container">
+    <div class="alert alert-primary text-center" role="alert">
+    </div>
+</div>
+<!-- ======= Accounts Section ======= -->
+<section id="accounts" class="accounts">
+    <div class="row">
+        <div class="col-12 mb-3">
+            <div class="page-title">
+                <h4>Accounts</h4>
+            </div>
+        </div>
+        <!-- ======= Total Users Cards ====== -->
+        <!-- <input type="hidden" id="moduleSelected" value="admin-dashboard"> -->
+        <div class="col-12">
+            <div class="row acc-card-body">
+                <div class="account-cards d-flex justify-content-between align-items-center">
+                    <div class="col-3 mb-0 flex-item">
+                        <div>
+                            <h5 class="acc-card-title">Total Admin Users</h5>
+                        </div>
+                        <div class="acc-total-admin d-flex justify-content-between align-items-center">
+                            <p class="acc-total-text">5</p>
+                            <i class='bx bx-user'></i>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-0 flex-item">
+                        <div>
+                            <h5 class="acc-card-title">Total Mobile Users</h5>
+                        </div>
+                        <div class="acc-total-admin d-flex justify-content-between align-items-center">
+                            <p class="acc-total-text">250</p>
+                            <i class='bx bx-user'></i>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-0 flex-item">
+                        <div>
+                            <h5 class="acc-card-title">Total Company Users</h5>
+                        </div>
+                        <div class="acc-total-admin d-flex justify-content-between align-items-center">
+                            <p class="acc-total-text">10</p>
+                            <i class='bx bx-user'></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ======= Table Users ====== -->
+        <div class="col-12 mb-3">
+            <div class="acc-table-users m-5">
+                <!-- Dropdown and Button -->
+                <div class="col-12 mb-3 d-flex justify-content-between align-items-center">
+                    <div class="dropdown py-2 d-flex align-items-center">
+                        <a class="btn btn-light btn-sm dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Select Users
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <button type="button" class="btn btn-primary px-3 d-flex align-items-center" data-bs-toggle="modal"
+                        data-bs-target="#account-addUser">Add
+                        <i class='bx bx-plus'></i>
+                    </button>
+                </div>
+                <!-- Table -->
+                <div class="col-12 mb-3 table-box">
+                    <div class="table-container">
+                        <div class="table-body">
+                            <table class="table table-borderless table-scroll">
+                                <thead class="table-light line-header">
+                                    <tr class="headline">
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Username</th>
+                                        <th scope="col">Password</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Mark</td>
+                                        <td>Otto</td>
+                                        <td>@mdo</td>
+                                        <td class="action-btn">
+                                            <a href="#" class="text-info" title="Edit">
+                                                <i class='bx bx-edit'></i>
+                                            </a>
+                                            <a href="#" class="text-danger" title="Delete">
+                                                <i class='bx bx-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Jacob</td>
+                                        <td>Thornton</td>
+                                        <td>@fat</td>
+                                        <td class="action-btn">
+                                            <a href="#" class="text-info" title="Edit">
+                                                <i class='bx bx-edit'></i>
+                                            </a>
+                                            <a href="#" class="text-danger" title="Delete">
+                                                <i class='bx bx-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">Larry the Bird</td>
+                                        <td>@twitter</td>
+                                        <td class="action-btn">
+                                            <a href="#" class="text-info" title="Edit">
+                                                <i class='bx bx-edit'></i>
+                                            </a>
+                                            <a href="#" class="text-danger" title="Delete">
+                                                <i class='bx bx-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Mark</td>
+                                        <td>Otto</td>
+                                        <td>@mdo</td>
+                                        <td class="action-btn">
+                                            <a href="#" class="text-info" title="Edit">
+                                                <i class='bx bx-edit'></i>
+                                            </a>
+                                            <a href="#" class="text-danger" title="Delete">
+                                                <i class='bx bx-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Jacob</td>
+                                        <td>Thornton</td>
+                                        <td>@fat</td>
+                                        <td class="action-btn">
+                                            <a href="#" class="text-info" title="Edit">
+                                                <i class='bx bx-edit'></i>
+                                            </a>
+                                            <a href="#" class="text-danger" title="Delete">
+                                                <i class='bx bx-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">Larry the Bird</td>
+                                        <td>@twitter</td>
+                                        <td class="action-btn">
+                                            <a href="#" class="text-info" title="Edit">
+                                                <i class='bx bx-edit'></i>
+                                            </a>
+                                            <a href="#" class="text-danger" title="Delete">
+                                                <i class='bx bx-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Jacob</td>
+                                        <td>Thornton</td>
+                                        <td>@fat</td>
+                                        <td class="action-btn">
+                                            <a href="#" class="text-info" title="Edit">
+                                                <i class='bx bx-edit'></i>
+                                            </a>
+                                            <a href="#" class="text-danger" title="Delete">
+                                                <i class='bx bx-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">Larry the Bird</td>
+                                        <td>@twitter</td>
+                                        <td class="action-btn">
+                                            <a href="#" class="text-info" title="Edit">
+                                                <i class='bx bx-edit'></i>
+                                            </a>
+                                            <a href="#" class="text-danger" title="Delete">
+                                                <i class='bx bx-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Jacob</td>
+                                        <td>Thornton</td>
+                                        <td>@fat</td>
+                                        <td class="action-btn">
+                                            <a href="#" class="text-info" title="Edit">
+                                                <i class='bx bx-edit'></i>
+                                            </a>
+                                            <a href="#" class="text-danger" title="Delete">
+                                                <i class='bx bx-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">Larry the Bird</td>
+                                        <td>@twitter</td>
+                                        <td class="action-btn">
+                                            <a href="#" class="text-info" title="Edit">
+                                                <i class='bx bx-edit'></i>
+                                            </a>
+                                            <a href="#" class="text-danger" title="Delete">
+                                                <i class='bx bx-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Jacob</td>
+                                        <td>Thornton</td>
+                                        <td>@fat</td>
+                                        <td class="action-btn">
+                                            <a href="#" class="text-info" title="Edit">
+                                                <i class='bx bx-edit'></i>
+                                            </a>
+                                            <a href="#" class="text-danger" title="Delete">
+                                                <i class='bx bx-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">Larry the Bird</td>
+                                        <td>@twitter</td>
+                                        <td class="action-btn">
+                                            <a href="#" class="text-info" title="Edit">
+                                                <i class='bx bx-edit'></i>
+                                            </a>
+                                            <a href="#" class="text-danger" title="Delete">
+                                                <i class='bx bx-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Jacob</td>
+                                        <td>Thornton</td>
+                                        <td>@fat</td>
+                                        <td class="action-btn">
+                                            <a href="#" class="text-info" title="Edit">
+                                                <i class='bx bx-edit'></i>
+                                            </a>
+                                            <a href="#" class="text-danger" title="Delete">
+                                                <i class='bx bx-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">Larry the Bird</td>
+                                        <td>@twitter</td>
+                                        <td class="action-btn">
+                                            <a href="#" class="text-info" title="Edit">
+                                                <i class='bx bx-edit'></i>
+                                            </a>
+                                            <a href="#" class="text-danger" title="Delete">
+                                                <i class='bx bx-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Account Add Modal ===== -->
+<div class="modal fade" id="account-addUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5> -->
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-12 text-center">
+                    <h4>Add User</h4>
+                </div>
+                <div class="col-12">
+                    <form class="m-5">
+                        <!-- Name input -->
+                        <div class="form-group mb-4">
+                            <label class="form-label" for="name2">Name</label>
+                            <input type="text" id="name2" class="form-control" />
+                        </div>
+
+                        <!-- Email input -->
+                        <div class="form-group mb-4">
+                            <label class="form-label" for="email2">Email address</label>
+                            <input type="email" id="email2" class="form-control" />
+                        </div>
+
+                        <!-- Password input -->
+                        <div class="form-group mb-4">
+                            <label class="form-label" for="password2">Password</label>
+                            <input type="password" id="password2" class="form-control" />
+                        </div>
+
+                        <!-- Submit button -->
+                        <div class="form-group mb-4">
+                            <button type="submit" class="btn btn-primary addBtn">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ======= Accounts Section End ======= -->
+
+<!-- ======= Subscription Section ======= -->
+<section id="subscription" class="subscription">
+    <div class="row">
+        <div class="col-12 mb-3">
+            <div class="page-title">
+                <h4>Subscription</h4>
+            </div>
+        </div>
+
+        <!-- Add Modal Plan -->
+        <div class="col-12">
+            <div class="add-plan">
+                <button type="button" class="btn btn-primary px-3 d-flex align-items-center" data-bs-toggle="modal"
+                    data-bs-target="#addSubscriptionPlan">Add
+                    <i class='bx bx-plus'></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Table For Plan -->
+        <div class="col-12 mb-3">
+            <div class="plan-table-bg">
+                <div class="col-12 mb-3">
+                    <div class="sub-title">
+                        <h4 class="card-title">Subscription Plan</h4>
+                    </div>
+                </div>
+                <div class="plan-table-container">
+                    <div class="plan-table-body">
+                        <div class="plan-table-content">
+                            <table class="table table-borderless table-secondary table-scroll" id="subscriptionPlan">
+                                <thead class="table line-header table-secondary">
+                                    <tr class="headline">
+                                        <th scope="col">Subscription Plan</th>
+                                        <th scope="col">Subscription Fee</th>
+                                        <th scope="col">Account No</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="subscriptionPlanData">
+                                    <!-- <tr>
+                                                        <td>Mark</td>
+                                                        <td>Otto</td>
+                                                        <td>@mdo</td>
+                                                    <td class="action-btn">
+                                                        <a href="#" class="text-info" title="Edit"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#editSubscriptionPlan">
+                                                            <i class='bx bx-edit'></i>
+                                                        </a>
+                                                        <a href="#" class="text-danger" title="Delete">
+                                                                <i class='bx bx-trash'></i>
+                                                            </a>
+                                                    </td>
+                                                    </tr> -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subscriber Table -->
+        <div class="col-12 mb-3">
+            <div class="subs-table-bg">
+                <div class="col-12 mb-3">
+                    <div class="sub-title">
+                        <h4 class="card-title">Subscribers</h4>
+                    </div>
+                </div>
+                <div class="subs-table-container">
+                    <div class="subs-table-body">
+                        <div class="subs-table-content">
+                            <table class="table table-borderless table-secondary table-scroll">
+                                <thead class="table line-header table-secondary">
+                                    <tr class="headline">
+                                        <th scope="col">Account Name</th>
+                                        <th scope="col">Subscription Plan</th>
+                                        <th scope="col">Subscription Date</th>
+                                        <th scope="col">Renewal</th>
+                                        <th scope="col">Days Left</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Mark</td>
+                                        <td>Otto</td>
+                                        <td>@mdo</td>
+                                        <td>@mdo</td>
+                                        <td>@mdo</td>
+                                        <td>
+                                            <p class="status">Active</p>
+                                        </td>
+                                        <td class="action-btn">
+                                            <a href="#" class="text-info" title="Edit">
+                                                <i class='bx bx-edit'></i>
+                                            </a>
+                                            <a href="#" class="text-danger" title="Delete">
+                                                <i class='bx bx-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mark</td>
+                                        <td>Otto</td>
+                                        <td>@mdo</td>
+                                        <td>@mdo</td>
+                                        <td>@mdo</td>
+                                        <td>
+                                            <p class="status">Active</p>
+                                        </td>
+                                        <td class="action-btn">
+                                            <a href="#" class="text-info" title="Edit">
+                                                <i class='bx bx-edit'></i>
+                                            </a>
+                                            <a href="#" class="text-danger" title="Delete">
+                                                <i class='bx bx-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mark</td>
+                                        <td>Otto</td>
+                                        <td>@mdo</td>
+                                        <td>@mdo</td>
+                                        <td>@mdo</td>
+                                        <td>
+                                            <p class="status">Active</p>
+                                        </td>
+                                        <td class="action-btn">
+                                            <a href="#" class="text-info" title="Edit">
+                                                <i class='bx bx-edit'></i>
+                                            </a>
+                                            <a href="#" class="text-danger" title="Delete">
+                                                <i class='bx bx-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mark</td>
+                                        <td>Otto</td>
+                                        <td>@mdo</td>
+                                        <td>@mdo</td>
+                                        <td>@mdo</td>
+                                        <td>
+                                            <p class="status">Active</p>
+                                        </td>
+                                        <td class="action-btn">
+                                            <a href="#" class="text-info" title="Edit">
+                                                <i class='bx bx-edit'></i>
+                                            </a>
+                                            <a href="#" class="text-danger" title="Delete">
+                                                <i class='bx bx-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mark</td>
+                                        <td>Otto</td>
+                                        <td>@mdo</td>
+                                        <td>@mdo</td>
+                                        <td>@mdo</td>
+                                        <td>
+                                            <p class="status">Active</p>
+                                        </td>
+                                        <td class="action-btn">
+                                            <a href="#" class="text-info" title="Edit">
+                                                <i class='bx bx-edit'></i>
+                                            </a>
+                                            <a href="#" class="text-danger" title="Delete">
+                                                <i class='bx bx-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Subscription Add Modal ===== -->
+<div class="modal fade" id="addSubscriptionPlan" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5> -->
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-12 text-center">
+                    <h4>Add Subscription Plan</h4>
+                </div>
+                <div class="col-12">
+                    <form class="m-5" id="addSubsPlan">
+                        <!-- Name input -->
+                        <div class="form-group mb-4">
+                            <label class="form-label" for="name2">Subscription Plan</label>
+                            <input type="text" id="subscriptPlan" class="form-control" />
+                        </div>
+
+                        <!-- Email input -->
+                        <div class="form-group mb-4">
+                            <label class="form-label" for="email2">Subscription Fee</label>
+                            <input type="text" id="subscriptFee" class="form-control" />
+                        </div>
+
+                        <!-- Password input -->
+                        <div class="form-group mb-4">
+                            <label class="form-label" for="password2">Account No</label>
+                            <input type="text" id="accountNum" class="form-control" />
+                        </div>
+
+                        <!-- Error Message -->
+                        <div class="mb-4 error-message" id="error-msg" style="display: none;">
+                            <p class="bg-danger p-2 text-light" id="err_msg"></p>
+                        </div>
+
+                        <!-- Submit button -->
+                        <div class="form-group mb-4">
+                            <button type="submit" class="btn btn-primary addBtn">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal End Here -->
+
+<!-- ===== Subscription Edit Modal ===== -->
+<div class="modal fade" id="editSubscriptionPlan" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5> -->
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-12 text-center">
+                    <h4>Edit Subscription Plan</h4>
+                </div>
+                <div class="col-12">
+                    <form class="m-5" id="editSubPlan">
+                        <div class="form-group mb-4">
+                            <label class="form-label" for="subscriptionPlanEdit">Subscription
+                                Plan</label>
+                            <input type="text" id="subscriptionPlanEdit" class="form-control" readonly />
+                        </div>
+                        <div class="form-group mb-4">
+                            <label class="form-label" for="subscriptionFeeEdit">Subscription Fee</label>
+                            <input type="text" id="subscriptionFeeEdit" class="form-control" required />
+                        </div>
+                        <div class="form-group mb-4">
+                            <label class="form-label" for="subscriptionAccEdit">Account No</label>
+                            <input type="text" id="subscriptionAccEdit" class="form-control" required />
+                        </div>
+
+                        <!-- Error Message -->
+                        <div class="mb-4 error-message" id="err-msg" style="display: none;">
+                            <p class="bg-danger p-2 text-light" id="error_msg"></p>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <button type="submit" class="btn btn-primary addBtn">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal End Here -->
+
+<!-- ======= Subscription Section End ======= -->
+
+<!-- ======= Notification Section ======= -->
+<section id="notification" class="notifiaction">
+    <div class="row">
+        <div class="col-12 mb-3">
+            <div class="page-title notify-text">
+                <h4>Notification</h4>
+            </div>
+        </div>
+        <div class="col-12 mb-3">
+            <div class="notif-container">
+                <div class="col-12 d-flex justify-content-end align-items-center">
+                    <button type="button" id="composebtn" class="btn btn-primary">
+                        <i class='bx bx-pencil'></i>
+                        Compose
+                    </button>
+                </div>
+                <div class="col-mb-12">
+
+                    <div class="title-container">
+                        <div class="col-12">
+                            <h4 class="card-title">Today</h4>
+                        </div>
+                        <div class="col-12 notif-card-container">
+                            <a href="" id="cardIssued" class="card bg-primary mb-2">
+                                <div class="card-element">
+                                    <div class="subject-text">
+                                        <p class=""><b>Shawn Mendez</b> Issue report</p>
+                                    </div>
+                                    <div class="date-issued">
+                                        <p>Jan-20-23 10:30am</p>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="" class="card bg-primary mb-2">
+                                <div class="card-element">
+                                    <div class="subject-text">
+                                        <p class=""><b>Shawn Mendez</b> Issue report</p>
+                                    </div>
+                                    <div class="date-issued">
+                                        <p>Jan-20-23 10:30am</p>
+                                    </div>
+                                </div>
+                            </a><a href="" class="card bg-primary mb-2">
+                                <div class="card-element">
+                                    <div class="subject-text">
+                                        <p class=""><b>Shawn Mendez</b> Issue report</p>
+                                    </div>
+                                    <div class="date-issued">
+                                        <p>Jan-20-23 10:30am</p>
+                                    </div>
+                                </div>
+                            </a><a href="" class="card bg-primary mb-2">
+                                <div class="card-element">
+                                    <div class="subject-text">
+                                        <p class=""><b>Shawn Mendez</b> Issue report</p>
+                                    </div>
+                                    <div class="date-issued">
+                                        <p>Jan-20-23 10:30am</p>
+                                    </div>
+                                </div>
+                            </a><a href="" class="card bg-primary mb-2">
+                                <div class="card-element">
+                                    <div class="subject-text">
+                                        <p class=""><b>Shawn Mendez</b> Issue report</p>
+                                    </div>
+                                    <div class="date-issued">
+                                        <p>Jan-20-23 10:30am</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ==== Issued Content ==== -->
+            <div class="notif-content-container">
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a id="backArrowContent"><i class='bx bx-arrow-back'></i></a>
+                            <a><i class='bx bx-trash-alt'></i></a>
+                        </div>
+                    </div>
+                    <!-- Subject and Name -->
+                    <div class="col-12 mb-3">
+                        <div class="subject-details">
+                            <p><b>Date:</b> Jan-20-23 10:30am</p>
+                            <p><b>Reprted By:</b> Shawn Mendez</p>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <div class="row">
+                            <div class="col-12 mb-2">
+                                <h5>Description:</h5>
+                            </div>
+                            <div class="col-12">
+                                <div class="content-text">
+                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores
+                                        quisquam iusto libero nostrum quas veniam eius, dolor dolorum,
+                                        quis esse, at ex unde ad? Quia ex eum eius illum eaque.
+
+                                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sed
+                                        eius dicta architecto! Id aut ratione harum illo velit voluptate
+                                        earum vel dolorem, culpa maxime, mollitia praesentium quos sunt
+                                        accusamus at!
+
+                                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                                        Doloremque labore exercitationem aliquam. Omnis quam minima
+                                        debitis aperiam ratione excepturi iure harum deleniti, vero
+                                        dolor accusamus ab ea eveniet quos? Omnis!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==== Compose MSG ==== -->
+            <div class="notif-msg-container">
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a id="backArrowMsg"><i class='bx bx-arrow-back'></i></a>
+                        </div>
+                    </div>
+                    <!-- Subject and Name -->
+                    <div class="col-12 mb-3">
+                        <div class="subject-details">
+                            <p><b>Date:</b> Jan-20-23 10:30am</p>
+                            <p><b>Reprted By:</b> Shawn Mendez</p>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <div class="row">
+                            <div class="col-12 mb-2">
+                                <h5>Description:</h5>
+                            </div>
+                            <div class="col-12">
+                                <div class="content-text">
+                                    <textarea class="message-text" placeholder="Message"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

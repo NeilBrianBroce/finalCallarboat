@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agency - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    
+    
+</head>
+<body>
+    <div class="wrapper">
+        <div id="sidebar" class="sidebar close">
+            <div class="logo-details clickable">
+                <i class='bx bxs-ship'></i> 
+                 <span class="logo_name">CallArBoat</span> 
+                <i class='bx bx-menu'></i>
+            </div>
+            <ul class="nav-links">
+                <li>
+                    <a href="index.html" id="dashboard-link">
+                        <i class='bx bx-grid-alt'></i>
+                        <span class="link_name">Dashboard</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="bookings.html">
+                        <i class='bx bx-book'></i>
+                        <span class="link_name">Bookings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="vessels.html">
+                        <i class='bx bxs-ship'></i>
+                        <span class="link_name">Vessels</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="route.html">
+                        <i class='bx bx-map-alt'></i>
+                        <span class="link_name">Route</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="schedule.html">
+                        <i class='bx bx-calendar-alt'></i>
+                        <span class="link_name">Schedule</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="travelFare.html">
+                        <i class='bx bx-coin-stack'></i>
+                        <span class="link_name">Travel Fare</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="subscription.html">
+                        <i class='bx bx-credit-card'></i>
+                        <span class="link_name">Subscription</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="accounts.html">
+                        <i class="bx bx-archive" aria-hidden="true"></i>
+                        <span class="link_name">Accounts</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <div class="profile-details">
+
+                        <!-- <div class="name-job">
+                        <i class='bx bx-log-in'></i>
+                    </div>
+                    <i class='bx bx-log-out'></i> -->
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    <div class="main">
+         <!-- ========= Main navbar section of dashboard ======= -->
+         <nav class="navbar navbar-expand bg-body-tertiary sidebar-collapsed m-0 p-0">
+            <div class="container-fluid">
+                <div class="sidebar-logo">
+                    <a href="#">
+                        <i class='bx bxs-ship'></i>
+                        CallArBoat</a>
+                </div>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a href="#" data-bs-toggle="dropdown" class="nav-icon">
+                            <img src="../assets/img/profile.jpg" alt="profile" class="avatar img-fluid ">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <a href="#" class="dropdown-item">Profile</a>
+                            <a href="#" class="dropdown-item">Settings</a>
+                            <a href="#" class="dropdown-item">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Bookings Table -->
+        <div class="container mt-5">
+            <h2>Bookings</h2> <br><br><br>
+            
+            <div class="search-bar" style="position: relative;">
+                <input type="text" id="searchBox" class="form-control" style="width: 150px; padding-left: 30px;" placeholder="Search...">
+                <i class="bx bx-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%);"></i>
+                <button id="searchButton" class="btn btn-primary">Search</button>
+            </div>
+            <br>
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="bookingsTable" class="table">
+                            <thead>
+                                <tr>
+                                    <th>AccomType</th>
+                                    <th>Age</th>
+                                    <th>Date</th>
+                                    <th>Destination</th>
+                                    <th>Gender</th>
+                                    <th>ImageUrl</th>
+                                    <th>Location</th>
+                                    <th>Name</th>
+                                    <th>TicketType</th>
+                                    <th>User</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody1">
+                                <!-- Table rows will be populated dynamically here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    <script src="bundle.js"></script>
+    <script>
+           // Add click event listener to logo-details
+        $('.logo-details').click(function() {
+            $('#sidebar').toggleClass('close');
+            $('.navbar').toggleClass('navbar-collapsed');
+        });
+    </script>
+</body>
+</html>

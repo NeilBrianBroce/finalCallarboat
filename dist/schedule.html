@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agency - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/bootstrap-icons.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div id="sidebar" class="sidebar close">
+            <div class="logo-details clickable">
+                <!-- <i class='bx bxs-ship'></i> -->
+                <!-- <span class="logo_name">CallArBoat</span> -->
+                <i class='bx bx-menu'></i>
+            </div>
+            <ul class="nav-links">
+                <li>
+                    <a href="index.html" id="dashboard-link">
+                        <i class='bx bx-grid-alt'></i>
+                        <span class="link_name">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="bookings.html">
+                        <i class='bx bx-book'></i>
+                        <span class="link_name">Bookings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="vessels.html">
+                        <i class='bx bxs-ship'></i>
+                        <span class="link_name">Vessels</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="route.html">
+                        <i class='bx bx-map-alt'></i>
+                        <span class="link_name">Route</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="schedule.html">
+                        <i class='bx bx-calendar-alt'></i>
+                        <span class="link_name">Schedule</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="travelFare.html">
+                        <i class='bx bx-coin-stack'></i>
+                        <span class="link_name">Travel Fare</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <i class='bx bx-credit-card'></i>
+                        <span class="link_name">Subscription</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="#">
+                        <i class="bx bx-archive" aria-hidden="true"></i>
+                        <span class="link_name">Accounts</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <div class="profile-details">
+
+                        <!-- <div class="name-job">
+                        <i class='bx bx-log-in'></i>
+                    </div>
+                    <i class='bx bx-log-out'></i> -->
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="main">
+            <nav class="navbar navbar-expand bg-body-tertiary sidebar-collapsed m-0 p-0">
+                <div class="container-fluid">
+                    <div class="sidebar-logo">
+                        <a href="#">
+                            <i class='bx bxs-ship'></i>
+                            CallArBoat</a>
+                    </div>
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a href="#" data-bs-toggle="dropdown" class="nav-icon">
+                                <img src="../assets/img/profile.jpg" alt="profile" class="avatar img-fluid ">
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a href="#" class="dropdown-item">Profile</a>
+                                <a href="#" class="dropdown-item">Settings</a>
+                                <a href="#" class="dropdown-item">Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Schedule Table-->
+            <div class="container mt-5 position-relative">
+                <h2>Schedule</h2> <br><br>
+                <input type="hidden" id="moduleSelected" value="schedule">
+                <div class="card">
+                    <div class="card-body">
+                        <button id="addSchedule" class="btn btn-primary mb-3 position-absolute" style="top: -40px; right: 20px;">Add +</button>
+                        <div class="table-responsive">
+                            <table id="scheduleTable" class="table table-bordered table-condensed table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Vessel Name</th>
+                                        <th>Schedule Name</th>
+                                        <th>First Trip</th>
+                                        <th>Second Trip</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="scheduleTbody">
+                                    <!-- Rows will be added dynamically here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+            <!-- Add Schedule Modal -->
+            <div class="modal fade" id="addScheduleModal" tabindex="-1" role="dialog" aria-labelledby="addScheduleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">                
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addScheduleModalLabel">Add Schedule</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addScheduleForm">
+                                <div class="form-group">
+                                    <label for="vesselName" class="col-form-label">Vessel Name:</label>
+                                    <select id="vesselID" class="form-select">
+                                        <option value="" disabled selected>Select a Vessel</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="scheduleName" class="col-form-label">Schedule Name:</label>
+                                    <input type="text" class="form-control" id="scheduleName">
+                                </div>
+                                <div class="form-group">
+                                    <label for="datetimeInput">First Trip:</label>
+                                    <input type="time" id="scheduleFirstTrip" class="form-control">
+                                  </div>
+                                <div class="form-group">
+                                    <label for="datetimeInput">Second Trip:</label>
+                                    <input type="time" id="scheduleSecondTrip" class="form-control">
+                                  </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                        <!-- Add Schedule Modal -->
+                        <div class="modal fade" id="editScheduleModal" tabindex="-1" role="dialog" aria-labelledby="editScheduleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">                
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editScheduleModalLabel">Edit Schedule</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="editScheduleForm">
+                                            <div class="form-group">
+                                                <input type="hidden" id="editScheduleID">
+                                                <label for="vesselName" class="col-form-label">Vessel Name:</label>
+                                                <select id="editVesselID" class="form-select">
+                                                    <option value="" disabled selected>Select a Vessel</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="scheduleName" class="col-form-label">Schedule Name:</label>
+                                                <input type="text" class="form-control" id="editScheduleName">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="datetimeInput">First Trip:</label>
+                                                <input type="time" id="editScheduleFirstTrip" class="form-control">
+                                              </div>
+                                            <div class="form-group">
+                                                <label for="datetimeInput">Second Trip:</label>
+                                                <input type="time" id="editScheduleSecondTrip" class="form-control">
+                                              </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    <script>
+        // Add click event listener to logo-details
+        $('.logo-details').click(function() {
+            $('#sidebar').toggleClass('close');
+        });
+
+        // Wait for the document to be ready
+        $(document).ready(function() {
+        // Add a click event listener to the button
+        $("#addSchedule").click(function() {
+            // Open the modal using jQuery
+            $("#addScheduleModal").modal("show");
+        });
+        });
+    </script>
+    <script src="bundle.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

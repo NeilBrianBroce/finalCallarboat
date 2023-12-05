@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <title>CallArBoat</title>
+        <!-- Favicons -->
+        <link href="../assets/../assets/img/site-icon.png" rel="site-icon">
+        <!-- <link href="assets/../assets/img/site-icon.png" rel="site-icon"> -->
+        <!-- Google Fonts -->
+        <link
+            href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+            rel="stylesheet">
+        <!-- ../assets/vendor CSS Files -->
+        <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+        <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+        <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+        <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://smtpjs.com/v3/smtp.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
+        <!-- Template Main CSS File -->
+        <link type="text/css" href="../assets/css/landing_page.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <!-- ======= Header ======= -->
+        <header id="header" class="fixed-top  header-transparent ">
+            <div class="container d-flex align-items-center justify-content-between">
+                <div class="logo">
+                    <h1>
+                        <a href="index.html">CallArBoat</a>
+                    </h1>
+                    <!-- Uncomment below if you prefer to use an image logo -->
+                    <!-- <a href="index.html"><img src="assets/../assets/img/logo.png" alt="" class="img-fluid"></a> -->
+                </div>
+                <nav id="navbar" class="navbar">
+                    <ul>
+                        <li>
+                            <a class="nav-link scrollto active" href="#home">Home</a>
+                        </li>
+                        <li>
+                            <a class="nav-link scrollto" href="#services">Services</a>
+                        </li>
+                        <li>
+                            <a class="nav-link scrollto" href="#about">About</a>
+                        </li>
+                        <li>
+                            <a class="nav-link scrollto" href="#contact">Contacts</a>
+                        </li>
+                        <li>
+                            <a class="getstarted scrollto" data-bs-toggle="modal" data-bs-target="#loginModal"
+                                href="#">Login</a>
+                        </li>
+                    </ul>
+                    <i class="bi bi-list mobile-nav-toggle"></i>
+                </nav>
+                <!-- .navbar -->
+            </div>
+        </header>
+        <!-- End Header -->
+        <!-- Login Modal Start Here -->
+        <div class="modal fade mt-5" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+            <input type="hidden" id="moduleSelected" value="login-config">
+            <div class="modal-dialog">
+                <div class="modal-content" style="border-right: 15px solid #507efd;">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h2 class="modal-title text-center" id="loginModalLabel">
+                            <b>Login</b>
+                        </h2>
+                        <p class="card-text text-center pt-2">Login and Set Sail Towards Smooth Seas.</p>
+                        <form class="ms-5 me-5 mb-5" id="loginUser">
+                            <div class="mb-4">
+                                <label for="emailLogin" class="form-label">Email</label>
+                                <input type="text" class="form-control" id="emailLogin" placeholder="Enter your email"
+                                    required autocomplete="Email">
+                            </div>
+                            <div class="mb-4">
+                                <label for="passwordLogin" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="passwordLogin"
+                                    placeholder="Enter your password" required autocomplete="current-password">
+                            </div>
+                            <div class="mb-4 error-message" id="error-message">
+                                <p class="bg-danger p-2 text-light" id="errormsg">Hello</p>
+                            </div>
+                            <div class="mb-4">
+                                <button type="submit" class="btn btn-primary form-control">Login</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ======= Home Section ======= -->
+        <section id="home" class="d-flex align-items-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 d-lg-flex flex-lg-column justify-content-center align-items-stretch pt-5 pt-lg-0 order-2 order-lg-1"
+                        data-aos="fade-up">
+                        <div>
+                            <h1>Sail Seamlessly with CallArBoat</h1>
+                            <h2>Your Mobile Ticketing Solution for Sea-based Transport.</h2>
+                            <input type="hidden" id="moduleSelected" value="subscription-register">
+                            <a href="#" class="btn btn-primary btn-lg getStarted" data-bs-toggle="modal"
+                                data-bs-target="#getModal" id="getStarted">Get
+                                Started</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 d-lg-flex flex-lg-column align-items-stretch order-1 order-lg-2 hero-img"
+                        data-aos="fade-up">
+                        <img src="../assets/img/icon-boat.png" class="img-fluid" alt="">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- End Home -->
+        <!-- Modal For Get Started-->
+        <div class="modal fade mt-5" id="getModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog " style="max-width: 700px;">
+                <!-- Add custom class here -->
+                <div class="modal-content bg-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body pad-lg">
+                        <div class="text-center body-header" style="padding-bottom: 30px;">
+                            <h5 class="card-title">
+                                <b>Subscription Plan</b>
+                            </h5>
+                            <p class="card-text">Subscribe now and start manage your business.</p>
+                        </div>
+                        <div class="row pad-row">
+                            <!-- First Row of Cards -->
+                            <div class="col-md-6">
+                                <div class="card mb-3 d-flex flex-column custom-card">
+                                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                        <h5 class="card-title G-title" id="monthly-plan">Loading...</h5>
+                                        <p class="card-text price-text" id="monthly-fee">Loading...</p>
+                                    </div>
+                                    <div class="card-footer text-center">
+                                        <a href="#" id="monthly" class="btn btn-primary sub-btn" data-bs-toggle="modal"
+                                            data-bs-target="#registerModal">Subscribe</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card mb-3 d-flex flex-column custom-card">
+                                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                        <h5 class="card-title G-title" id="yearly-plan">Loading...</h5>
+                                        <p class="card-text price-text" id="yearly-fee">Loading...</p>
+                                    </div>
+                                    <div class="card-footer text-center">
+                                        <a href="#" id="yearly" class="btn btn-primary sub-btn" data-bs-toggle="modal"
+                                            data-bs-target="#registerModal">Subscribe</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Message after Successfully Subscribe or Login -->
+        <div class="alert-container">
+            <div class="alert alert-primary text-center" role="alert">
+            </div>
+        </div>
+
+        <!-- ===== OTP Verification Modal ===== -->
+        <div class="modal fade" id="otpVerification" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-12 text-center">
+                            <h4>Email Verification</h4>
+                        </div>
+                        <div class="col-12">
+                            <form class="m-5" id="enterOTPForm">
+                                <!-- OTP input -->
+                                <div class="form-group mb-4">
+                                    <label class="form-label" for="otpCode">Verification Code:</label>
+                                    <input type="number" id="otpCode" class="form-control"
+                                        placeholder="Enter verification code" />
+                                </div>
+
+                                <!-- Error Message -->
+                                <div class="mb-4 error-message" id="error-msg" style="display: none;">
+                                    <p class="bg-danger p-2 text-light" id="err_msg"></p>
+                                </div>
+
+                                <!-- Submit button -->
+                                <div class="form-group mb-4">
+                                    <button type="submit" class="btn btn-primary addBtn">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Register Modal Start Here -->
+        <div class="modal fade mt-5" id="registerModal" data-bs-backdrop="static" tabindex="-1"
+            aria-labelledby="registerModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" style="border-right: 15px solid #507efd;">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h2 class="modal-title text-center" id="registerSubplan">Subscription</h2>
+                        <p class="card-text text-center">Fill up the subscription details.</p>
+                        <form class="ms-5 me-5 mb-5" id="registerSubscription">
+                            <div class="mb-4">
+                                <label for="subplan" class="form-label">Subscription Plan</label>
+                                <input type="text" class="form-control" id="subplan" readonly>
+                            </div>
+                            <div class="mb-4">
+                                <label for="subdate" class="form-label">Subscription Date</label>
+                                <input type="datetime-local" class="form-control" id="subdate" readonly />
+                            </div>
+                            <div class="mb-4">
+                                <label for="subdaterenew" class="form-label">Subscription Renewal</label>
+                                <input type="datetime-local" class="form-control" id="subdaterenew" readonly />
+                            </div>
+                            <div class="mb-4">
+                                <label for="companyname" class="form-label">Company Name</label>
+                                <input type="text" class="form-control" id="companyname"
+                                    placeholder="Enter your company name" required />
+                            </div>
+                            <div class="mb-4">
+                                <label for="emailUser" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="emailUser" placeholder="Enter your email"
+                                    required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="passwordUser" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="passwordUser"
+                                    placeholder="Enter your password" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="profile" class="form-label">Upload Profile</label>
+                                <input type="file" id="profile" name="image" class="mb-4" required>
+                            </div>
+
+                            <div class="mb-4 error-message" id="error-msg" style="display: none;">
+                                <p class="bg-danger p-2 text-light" id="err_msg"></p>
+                            </div>
+                            <div class="mb-4">
+                                <button type="submit" class="btn btn-primary form-control">Proceed</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Here -->
+
+        <!-- ===== Payment Modal ===== -->
+        <div class="modal fade" id="paymentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <!-- <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5> -->
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-12 text-center">
+                            <h4>Payment Info</h4>
+                        </div>
+                        <div class="col-12">
+                            <form class="m-5" id="paymentForm">
+                                <!-- Company Name -->
+                                <div class="form-group mb-4">
+                                    <label class="form-label" for="company_name">Company Name:</label>
+                                    <input type="text" id="company_name" class="form-control" />
+                                </div>
+                                <!-- Plan -->
+                                <div class="form-group mb-4">
+                                    <label class="form-label" for="subsciptPlan">Subscription Plan:</label>
+                                    <input type="text" id="subsciptPlan" class="form-control" />
+                                </div>
+                                <!--  input -->
+                                <div class="form-group mb-4">
+                                    <label class="form-label" for="amountFee">Subscription Fee:</label>
+                                    <input type="text" id="amountFee" class="form-control" />
+                                </div>
+
+                                <div class="form-group mb-4">
+                                    <select class="form-select" id="paymentMethodSelect">
+                                        <option selected disabled>Select Payment Method</option>
+                                        <option value="gcash">GCash</option>
+                                        <!-- Add more payment options here -->
+                                    </select>
+                                </div>
+
+                                <!-- Error Message -->
+                                <div class="mb-4 error-message" id="error-msg" style="display: none;">
+                                    <p class="bg-danger p-2 text-light" id="err_msg"></p>
+                                </div>
+
+                                <!-- Submit button -->
+                                <div class="form-group mb-4">
+                                    <button type="submit" class="btn btn-primary addBtn">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Here -->
+
+        <!-- TOAST MESSAGE -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <img src="../assets/img/toast-img.png" class="rounded me-2" alt="...">
+                    <strong class="me-auto" id="toastTitle">Bootstrap</strong>
+                    <!-- <small id="toastTime">11 mins ago</small> -->
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body" id="toastMessage">
+                    Hello, world! This is a toast message.
+                </div>
+            </div>
+        </div>
+        <!-- END HERE -->
+
+        <main id="main">
+            <!-- ======= Services Section ======= -->
+            <section id="services" class="service">
+                <div class="container">
+                    <div class="section-title">
+                        <h2>Services</h2>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-12">
+                            <div class="content d-flex flex-column justify-content-center">
+                                <div class="row justify-content-center">
+                                    <div class="col-md-4 mb-4">
+                                        <!-- Adjust the column size as needed -->
+                                        <div class="card zoom-effect" style="width: 100%; padding: 20px;">
+                                            <img src="../assets/img/ticket-booking.png" class="card-img-top" alt="...">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Ticket Booking</h5>
+                                                <p class="card-text">Experience the convenience of instant ticket
+                                                    booking with our seamless
+                                                    e-ticketing service.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-4">
+                                        <!-- Adjust the column size as needed -->
+                                        <div class="card zoom-effect" style="width: 100%; padding: 20px;">
+                                            <img src="../assets/img/online-payment.png" class="card-img-top" alt="...">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Online Payment</h5>
+                                                <p class="card-text">Securely complete your transactions with ease using
+                                                    our hassle-free online
+                                                    payment system.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-4">
+                                        <!-- Adjust the column size as needed -->
+                                        <div class="card zoom-effect" style="width: 100%; padding: 20px;">
+                                            <img src="../assets/img/data-management.png" class="card-img-top" alt="...">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Data Management</h5>
+                                                <p class="card-text">Safeguard your information and streamline
+                                                    operations with our efficient
+                                                    data management solutions.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- End Services Section -->
+            <!-- ======= About Section ======= -->
+            <section id="about" class="about">
+                <div class="container">
+                    <div class="section-title about-title">
+                        <h2>About</h2>
+                    </div>
+                    <div class="row content">
+                        <div class="col-md-4" data-aos="fade-right">
+                            <img src="../assets/img/mobile-app.png" class="img-fluid" alt="" style="max-width: 100%;">
+                        </div>
+                        <div class="col-md-8 pt-4" data-aos="fade-up">
+                            <h3>Introducing CallArBoat:</h3>
+                            <p class="fst-italic about-p"> The future of sea-based transportation. Say goodbye to queues
+                                and manual
+                                ticketing hassles. With our user-friendly mobile app, effortlessly book tickets for a
+                                seamless journey.
+                                Streamline operations and make data-driven decisions with our advanced data management
+                                capabilities.
+                                Experience convenience, efficiency, and a connected sea travel experience. Get started
+                                with CallArBoat
+                                now. </p>
+                        </div>
+                    </div>
+                    <!-- ======= Contact Section ======= -->
+                    <section id="contact" class="contact">
+                        <div class="container" data-aos="fade-up">
+                            <div class="section-title">
+                                <h2>Contact</h2>
+                                <p>We’ve loved to hear from you.</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="row">
+                                        <div class="col-lg-6 info">
+                                            <i class="bx bx-map"></i>
+                                            <h4>Address</h4>
+                                            <p>Skina japan colon street, <br>Cebu City </p>
+                                        </div>
+                                        <div class="col-lg-6 info">
+                                            <i class="bx bx-phone"></i>
+                                            <h4>Call Us</h4>
+                                            <p>TM: 093523984334 <br>SMART: 09182334824 </p>
+                                        </div>
+                                        <div class="col-lg-6 info">
+                                            <i class="bx bx-envelope"></i>
+                                            <h4>Email Us</h4>
+                                            <p>callarboat.official@gmail.com</p>
+                                        </div>
+                                        <div class="col-lg-6 info">
+                                            <i class="bi bi-facebook"></i>
+                                            <h4>FB Page</h4>
+                                            <p>Callarboat Official</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <form action="forms/contact" method="post" role="form" class="php-email-form"
+                                        data-aos="fade-up">
+                                        <div class="form-group">
+                                            <input placeholder="Your Name" type="text" name="name" class="form-control"
+                                                id="name" required>
+                                        </div>
+                                        <div class="form-group mt-3">
+                                            <input placeholder="Your Email" type="email" class="form-control"
+                                                name="email" id="email" required>
+                                        </div>
+                                        <div class="form-group mt-3">
+                                            <input placeholder="Subject" type="text" class="form-control" name="subject"
+                                                id="subject" required>
+                                        </div>
+                                        <div class="form-group mt-3">
+                                            <textarea placeholder="Message" class="form-control" name="message" rows="5"
+                                                required></textarea>
+                                        </div>
+                                        <div class="my-3">
+                                            <div class="loading">Loading</div>
+                                            <div class="error-message"></div>
+                                            <div class="sent-message">Your message has been sent. Thank you!</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <button type="submit">Send Message</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- End Contact Section -->
+        </main>
+        <!-- End #main -->
+        <!-- ======= Footer ======= -->
+        <footer id="footer">
+            <div class="container py-4">
+                <div class="copyright"> &copy; Allright Reverse 2023 <strong>
+                        <span>CallArBoat</span>
+                    </strong> All rights reserved. </div>
+                <div class="credits"> Designed by CallArBoat Members </div>
+            </div>
+        </footer>
+        <!-- End Footer -->
+        <a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+            <i class="bi bi-arrow-up-short"></i>
+        </a>
+
+        <!-- Include the Firebase SDK -->
+        <!-- <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js"></script> -->
+        <!-- <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js"></script> -->
+        <!-- <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js"></script> -->
+        <!-- ../assets/vendor JS Files -->
+        <script src="../assets/vendor/aos/aos.js"></script>
+        <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script> -->
+        <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+        <!-- Template Main JS File -->
+        <script src="../src/main.js"></script>
+        <script src="bundle.js"></script>
+        <!-- <script src="/javascript/util/subplan.js"></script>
+        <script type="module" src="/javascript/config/registerSubscription.js"></script>
+        <script type="module" src="/javascript/config/Login_Verification.js"></script>
+        Indicate that the script should be treated as an ECMAScript module.
+        <script type="module" src="/server.js"></script> -->
+    </body>
+
+</html>
